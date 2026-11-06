@@ -1,14 +1,14 @@
 # F01 · Base — Guías del repositorio y mockups
 
-| Campo            | Valor                         |
-| ---------------- | ----------------------------- |
-| Responsable      | Braian                        |
-| Revisión         | Fernando                      |
-| Etapa            | 0. Base                       |
-| Depende de       | Ninguna                       |
-| Repositorio      | frontend                      |
-| Rama             | `docs/f01-guias-para-agentes` |
-| Tarjeta anterior | Nueva                         |
+| Campo            | Valor                            |
+| ---------------- | -------------------------------- |
+| Responsable      | Braian                           |
+| Revisión         | Fernando                         |
+| Etapa            | 0. Base                          |
+| Depende de       | Ninguna                          |
+| Repositorio      | frontend                         |
+| Rama             | `docs/f01-guias-del-repositorio` |
+| Tarjeta anterior | Nueva                            |
 
 > Leer antes `docs/tasks/README.md`. Si hace falta un archivo fuera de esta lista o una decisión no escrita acá, detenerse y consultar al responsable: no ampliar el alcance.
 

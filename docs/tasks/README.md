@@ -6,7 +6,7 @@ El frontend se conecta al backend real: el criterio de Funcionalidad (40%) pide 
 
 ## Reglas para personas y agentes
 
-1. **Una tarea, una rama, un PR hacia `main`.** Idealmente menos de 400 líneas.
+1. **Una tarea, una rama, un PR hacia `development`.** La rama sale de `development` actualizada. Idealmente menos de 400 líneas.
 2. **Solo se tocan los archivos permitidos de la tarea.** Si hace falta otro, detenerse y consultar.
 3. **No agregar requisitos.** Lo que no está en la tarea o en el enunciado no se hace.
 4. **Stack cerrado:** React, React Router, React Hook Form, Axios y Tailwind. Ninguna librería nueva sin acuerdo del equipo.
@@ -19,7 +19,12 @@ El frontend se conecta al backend real: el criterio de Funcionalidad (40%) pide 
 11. **Archivos compartidos** (`App.jsx`, `index.css`, `shared/`): solo los cambia una tarea que los liste.
 12. **Nada de datos simulados, credenciales ni tokens** en el código.
 13. **Antes de pedir revisión:** `npm run build`, `npm run lint` y `npm run format:check`.
-14. **Nadie aprueba su propio PR.** Se mueve a Terminado después del merge y de comprobar el flujo sobre `main` actualizado.
+14. **Nadie aprueba su propio PR.** Se mueve a Terminado después del merge y de comprobar el flujo sobre `development` actualizada.
+
+## Ramas
+
+- `development`: integración. Recibe los PR de cada tarea.
+- `main`: entrega. Solo recibe `development` por PR, al cerrar el trabajo (F41). En el backend, lo hace F39.
 
 ## Reparto
 
@@ -31,7 +36,7 @@ El frontend se conecta al backend real: el criterio de Funcionalidad (40%) pide 
 
 ## Orden de ejecución
 
-El número no es una cola estricta: una tarea puede empezar cuando sus dependencias están en `main`.
+El número no es una cola estricta: una tarea puede empezar cuando sus dependencias están en `development`.
 
 - **Etapa 0:** F01, F02, F03, F05 y F06 pueden ir en paralelo.
 - **Etapa 1:** F09 primero. F10 destraba las pantallas de administración y F11 las de paciente.
