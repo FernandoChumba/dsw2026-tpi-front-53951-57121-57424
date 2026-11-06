@@ -10,7 +10,7 @@ Frontend del sistema de turnos médicos del TPI 2026, conectado al backend real.
 4. Consultar [`docs/ui-guide.md`](docs/ui-guide.md) si la tarea cambia la UI.
 5. Abrir el mockup que cita la tarea (ver la tabla de abajo).
 
-**Frenar y consultar** si hace falta un archivo fuera de la lista, una decisión que la tarea no define o una dependencia que todavía no está en `main`.
+**Frenar y consultar** si hace falta un archivo fuera de la lista, una decisión que la tarea no define o una dependencia que todavía no está en `development`.
 
 ## Comandos
 
@@ -24,13 +24,22 @@ Frontend del sistema de turnos médicos del TPI 2026, conectado al backend real.
 
 Antes de pedir revisión, ejecutar `build`, `lint` y `format:check`.
 
+## Ramas
+
+| Rama          | Uso                                                             |
+| ------------- | --------------------------------------------------------------- |
+| `development` | Integración: las ramas de tarea salen de acá y vuelven por PR   |
+| `main`        | Entrega: solo recibe `development` por PR, al cerrar el trabajo |
+
+GitHub propone `main` como base, así que hay que elegir `development`: `gh pr create --base development`.
+
 ## Stack cerrado
 
 React, React Router, React Hook Form, Axios y Tailwind. No agregar librerías sin acuerdo del equipo.
 
 ## Reglas clave
 
-- **Trabajo:** una tarea, una rama y un PR hacia `main`. Nadie aprueba su propio PR.
+- **Trabajo:** una tarea, una rama y un PR hacia `development`. Nadie aprueba su propio PR.
 - **Arquitectura:** `modules/<dominio>/{pages,components,hooks,services}`. La página usa un hook, el hook usa un service, y `axios` nunca aparece en una vista.
 - **UI:** usar tokens `med-*` y componentes de `shared`. Mobile-first en cada tarea.
 - **Formularios:** React Hook Form, con el error debajo de cada campo.
