@@ -14,7 +14,7 @@
 
 ## Objetivo
 
-Automatizar los controles de cada PR para que ningún cambio roto llegue a `main`.
+Automatizar los controles de cada PR para que ningún cambio roto llegue a `development` ni a `main`.
 
 ## Referencias
 
@@ -41,9 +41,9 @@ Automatizar los controles de cada PR para que ningún cambio roto llegue a `main
 
 ## Criterios de aceptación
 
-- [ ] El workflow corre en cada PR hacia `main` y ejecuta `npm ci`, `build`, `lint` y `format:check`.
+- [ ] El workflow corre en cada PR hacia `development` y `main`, y ejecuta `npm ci`, `build`, `lint` y `format:check`.
 - [ ] El template pide: tarjeta, qué se hizo, pasos de prueba, capturas y resultado de los tres comandos.
-- [ ] Fernando, como dueño del repositorio, evalúa exigir el check y una aprobación para mergear en `main`.
+- [ ] Fernando, como dueño del repositorio, evalúa exigir el check y una aprobación para mergear en `development` y `main`.
 
 ## Verificación
 

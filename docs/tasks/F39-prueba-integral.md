@@ -45,8 +45,9 @@ Comprobar el sistema integrado contra el backend real.
 - [ ] Se prueba: acceso indebido, formularios inválidos, listas vacías, doble confirmación, conflicto de reserva y sesión vencida.
 - [ ] Cada paso queda registrado con su resultado.
 - [ ] Ningún defecto queda abierto sin responsable.
+- [ ] En el backend, `development` se pasa a `main` por PR, y el repositorio queda listo para la entrega.
 
 ## Verificación
 
-- Repetir el circuito sobre `main` actualizado después de corregir los defectos.
+- Repetir el circuito sobre `development` actualizada después de corregir los defectos.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
