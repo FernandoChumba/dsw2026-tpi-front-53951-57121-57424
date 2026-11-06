@@ -44,7 +44,6 @@ Completar el README que pide la entrega.
 - [ ] Incluye datos de los integrantes, instrucciones de ejecución y descripción de endpoints.
 - [ ] Se reemplaza el nombre `unidad-5` del proyecto.
 - [ ] Un compañero levanta el proyecto siguiendo solo el README.
-- [ ] Con F40 y F41 integradas, `development` se pasa a `main` por PR, y el README y la aplicación quedan listos en `main`.
 
 ## Verificación
 
