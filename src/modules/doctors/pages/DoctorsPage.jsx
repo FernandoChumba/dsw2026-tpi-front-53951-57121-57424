@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import Card from '../../shared/components/Card';
 import Button from '../../shared/components/Button';
+import ConfirmDialog from '../../shared/components/ConfirmDialog';
+import FormMessage from '../../shared/components/FormMessage';
 
 function DoctorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [doctorToRemove, setDoctorToRemove] = useState(null);
+  const [removedDoctorName, setRemovedDoctorName] = useState('');
 
-  const doctorsList = [
+  const [doctorsList, setDoctorsList] = useState(() => [
     {
       id: 'MED-4920',
       name: 'Dr. Alejandro Rivera',
@@ -38,7 +42,7 @@ function DoctorsPage() {
       statusType: 'active',
       avatar: '👩‍⚕️',
     },
-  ];
+  ]);
 
   const filteredDoctors = doctorsList.filter(
     (doc) =>
@@ -47,8 +51,22 @@ function DoctorsPage() {
       doc.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  function removeDoctor() {
+    if (!doctorToRemove) return;
+
+    setDoctorsList((doctors) =>
+      doctors.filter(({ id }) => id !== doctorToRemove.id)
+    );
+    setRemovedDoctorName(doctorToRemove.name);
+  }
+
   return (
     <div className="flex flex-col gap-6">
+      {removedDoctorName && (
+        <FormMessage type="success">
+          {removedDoctorName} ya no figura en este listado de prueba.
+        </FormMessage>
+      )}
       {/* Título y Acciones de Cabecera */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div>
@@ -137,6 +155,13 @@ function DoctorsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-med-border-subtle">
+              {filteredDoctors.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="p-6 text-center text-med-text-sub">
+                    No hay médicos para mostrar.
+                  </td>
+                </tr>
+              )}
               {filteredDoctors.map((doc) => (
                 <tr
                   key={doc.id}
@@ -242,9 +267,7 @@ function DoctorsPage() {
                       <button
                         title="Eliminar profesional"
                         className="p-1.5 rounded-lg hover:bg-red-50 text-med-danger-text transition"
-                        onClick={() =>
-                          alert(`Eliminar profesional ${doc.name}`)
-                        }
+                        onClick={() => setDoctorToRemove(doc)}
                       >
                         <svg
                           className="w-4 h-4"
@@ -270,7 +293,9 @@ function DoctorsPage() {
 
         {/* Paginador normalizado idéntico a Búsqueda y Filtrado de Citas */}
         <div className="p-4 bg-med-primary-50/50 border-t border-med-border flex items-center justify-between text-xs text-med-text-muted">
-          <span>Mostrando 4 de 124 registros</span>
+          <span>
+            Mostrando {filteredDoctors.length} de {doctorsList.length} registros
+          </span>
           <div className="flex items-center gap-1">
             <button className="px-2.5 py-1 border border-med-border rounded bg-white text-med-text-sub hover:bg-gray-50">
               ‹
@@ -281,6 +306,19 @@ function DoctorsPage() {
           </div>
         </div>
       </Card>
+      <ConfirmDialog
+        isOpen={Boolean(doctorToRemove)}
+        title="Eliminar médico"
+        description={
+          doctorToRemove
+            ? `¿Querés quitar a ${doctorToRemove.name} del listado de prueba?`
+            : ''
+        }
+        confirmLabel="Eliminar"
+        variant="danger"
+        onClose={() => setDoctorToRemove(null)}
+        onConfirm={removeDoctor}
+      />
     </div>
   );
 }
