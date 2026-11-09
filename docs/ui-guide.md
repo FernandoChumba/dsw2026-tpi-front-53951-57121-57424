@@ -37,22 +37,28 @@ Definidos en `@theme`, dentro de `src/index.css`. Se usan como clases: `bg-med-b
 
 ## Componentes
 
-| Componente                              | Props principales                                                         | Estado                           |
-| --------------------------------------- | ------------------------------------------------------------------------- | -------------------------------- |
-| `Button`                                | `variant` admite `default`, `secondary`, `outline`, `ghost` y `danger`    | Disponible                       |
-| `Card`                                  | `className`, `children`                                                   | Disponible                       |
-| `Input`                                 | `label`, `error`, `id`, props nativas de input                            | Disponible                       |
-| `TablePagination`                       | Hoy `currentPage`, `totalPages`, `totalItems`, `pageSize`, `onPageChange` | F08 lo pasa a `pageIndex` base 0 |
-| `PageHeader`                            | `title`, `description`, `actions`                                         | Disponible                       |
-| `SearchInput`                           | Props de `Input`, con tipo de búsqueda y etiqueta predeterminada «Buscar» | Disponible                       |
-| `Select`                                | `label`, `error`, `id`, opciones como hijos y props nativas de select     | Disponible                       |
-| `Textarea`                              | `label`, `error`, `id`, `rows` y props nativas de textarea                | Disponible                       |
-| `StatusBadge`                           | `status` recibe el estado de turno de la API                              | Disponible                       |
-| `DataTable`                             | `caption`, `columns`, `rows`, `getRowKey`, `emptyMessage`                 | Disponible                       |
-| `EmptyState`                            | `title`, `description`, `action`                                          | Disponible                       |
-| `Modal`, `ConfirmDialog`, `FormMessage` | Las define F07                                                            | Pendiente de F07                 |
+| Componente        | Props principales                                                                                  | Estado                           |
+| ----------------- | -------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `Button`          | `variant` admite `default`, `secondary`, `outline`, `ghost` y `danger`                             | Disponible                       |
+| `Card`            | `className`, `children`                                                                            | Disponible                       |
+| `Input`           | `label`, `error`, `id`, props nativas de input                                                     | Disponible                       |
+| `TablePagination` | Hoy `currentPage`, `totalPages`, `totalItems`, `pageSize`, `onPageChange`                          | F08 lo pasa a `pageIndex` base 0 |
+| `PageHeader`      | `title`, `description`, `actions`                                                                  | Disponible                       |
+| `SearchInput`     | Props de `Input`, con tipo de búsqueda y etiqueta predeterminada «Buscar»                          | Disponible                       |
+| `Select`          | `label`, `error`, `id`, opciones como hijos y props nativas de select                              | Disponible                       |
+| `Textarea`        | `label`, `error`, `id`, `rows` y props nativas de textarea                                         | Disponible                       |
+| `StatusBadge`     | `status` recibe el estado de turno de la API                                                       | Disponible                       |
+| `DataTable`       | `caption`, `columns`, `rows`, `getRowKey`, `emptyMessage`                                          | Disponible                       |
+| `EmptyState`      | `title`, `description`, `action`                                                                   | Disponible                       |
+| `Modal`           | `isOpen`, `title`, `onClose`, `children`, `dismissible`                                            | Disponible                       |
+| `ConfirmDialog`   | `isOpen`, `title`, `description`, `onConfirm`, `onClose`, `confirmLabel`, `cancelLabel`, `variant` | Disponible                       |
+| `FormMessage`     | `type` admite `success` y `error`, con el mensaje como hijo                                        | Disponible                       |
 
 Quien complete una de esas tareas actualiza esta tabla en el mismo PR.
+
+Controlar la apertura de `Modal` y `ConfirmDialog` con `isOpen`. En `onClose`, cambiar ese estado a `false`. El modal admite Escape y devuelve el foco al elemento que lo abrió.
+
+En `ConfirmDialog`, `onConfirm` puede devolver una promesa. Mientras se resuelve, se bloquean los botones y el cierre. Si la acción termina correctamente, se llama a `onClose`. Si falla, el diálogo queda abierto y permite reintentar. Usar `variant="danger"` para confirmaciones de eliminación.
 
 Pasar `{...register('campo')}` a `Input`, `Select` o `Textarea` y el mensaje de validación a `error`. Cada campo vincula su etiqueta y el error con el control nativo.
 
