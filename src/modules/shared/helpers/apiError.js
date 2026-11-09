@@ -24,8 +24,9 @@ const NETWORK_ERROR_MESSAGE =
 
 // Los nombres de campo llegan en distintos formatos ('dni', 'Email',
 // 'Patient.Dni'). Se normalizan a camelCase sin prefijo: 'dni', 'email'.
-const normalizeField = (field = '') => {
-  const name = field.split('.').pop();
+// Si el campo no viene (null o undefined), se usa una cadena vacía.
+const normalizeField = (field) => {
+  const name = (field ?? '').split('.').pop();
 
   return name.charAt(0).toLowerCase() + name.slice(1);
 };
