@@ -3,24 +3,24 @@
 // Ver la sección "Errores" de docs/api-contract.md.
 
 const MESSAGES = {
-  VALIDATION_ERROR: 'Revise los datos ingresados.',
+  VALIDATION_ERROR: 'Revisá los datos ingresados.',
   APPOINTMENT_VALIDATION: 'Los datos del turno no son válidos.',
   AVAILABILITY_VALIDATION: 'Los datos de la disponibilidad no son válidos.',
   AUTHENTICATION_FAILED: 'Usuario y/o contraseña no son correctos.',
-  AUTHORIZATION_FAILED: 'No tiene permiso para realizar esta acción.',
+  AUTHORIZATION_FAILED: 'No tenés permiso para realizar esta acción.',
   ENTITY_NOTFOUND: 'El elemento buscado no existe.',
-  APPOINTMENT_CONFLICT: 'El horario elegido ya no está disponible. Elija otro.',
-  APPOINTMENT_INVALID_STATUS: 'El turno cambió de estado. Actualice la lista.',
+  APPOINTMENT_CONFLICT: 'El horario elegido ya no está disponible. Elegí otro.',
+  APPOINTMENT_INVALID_STATUS: 'El turno cambió de estado. Actualizá la lista.',
   AVAILABILITY_DUPLICATE_DAY: 'Ese día ya tiene disponibilidad cargada.',
   RATE_LIMIT_EXCEEDED:
-    'Se realizaron demasiados intentos. Espere un minuto y vuelva a probar.',
-  UNHANDLED_ERROR: 'Ocurrió un error inesperado. Intente de nuevo más tarde.',
+    'Hiciste demasiados intentos. Esperá un minuto y volvé a probar.',
+  UNHANDLED_ERROR: 'Ocurrió un error inesperado. Intentá de nuevo más tarde.',
   AVAILABILITY_CALENDAR_UNAVAILABLE:
-    'No se pudo guardar la disponibilidad. Intente de nuevo más tarde.',
+    'No se pudo guardar la disponibilidad. Intentá de nuevo más tarde.',
 };
 
 const NETWORK_ERROR_MESSAGE =
-  'No se pudo conectar con el servidor. Revise su conexión.';
+  'No se pudo conectar con el servidor. Revisá tu conexión.';
 
 // Los nombres de campo llegan en distintos formatos ('dni', 'Email',
 // 'Patient.Dni'). Se normalizan a camelCase sin prefijo: 'dni', 'email'.
