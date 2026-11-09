@@ -26,6 +26,7 @@ export default function useDoctors() {
   const isSearchTooShort =
     search.trim().length > 0 && search.trim().length < MIN_SEARCH_LENGTH;
 
+  // La búsqueda se aplica recién cuando el usuario deja de escribir.
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), SEARCH_DELAY_MS);
 
