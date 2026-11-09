@@ -33,7 +33,13 @@ export default function useDoctors() {
   }, [search]);
 
   useEffect(() => {
-    if (term.length > 0 && term.length < MIN_SEARCH_LENGTH) return;
+    // Búsqueda demasiado corta: no se consulta. Se apaga la carga por si quedó
+    // una consulta anterior en curso (su respuesta se descarta en el cleanup).
+    if (term.length > 0 && term.length < MIN_SEARCH_LENGTH) {
+      setIsLoading(false);
+
+      return;
+    }
 
     // Si el usuario cambia de página o de búsqueda antes de que llegue la
     // respuesta anterior, esa respuesta se descarta para no pisar la nueva.
