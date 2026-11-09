@@ -5,7 +5,7 @@ import Card from '../../shared/components/Card';
 import Input from '../../shared/components/Input';
 import Select from '../../shared/components/Select';
 
-export default function DoctorForm({ specialties = [], onSubmit, onCancel }) {
+function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
   const pending = useRef(false);
   const {
     register,
@@ -13,7 +13,11 @@ export default function DoctorForm({ specialties = [], onSubmit, onCancel }) {
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { name: '', licenseNumber: '', specialtyId: '' },
+    defaultValues: {
+      name: doctor?.name ?? '',
+      licenseNumber: doctor?.licenseNumber ?? '',
+      specialtyId: doctor?.specialty?.id ?? '',
+    },
   });
   const hasSpecialties = specialties.length > 0;
 
@@ -37,7 +41,7 @@ export default function DoctorForm({ specialties = [], onSubmit, onCancel }) {
     <Card>
       <div className="border-b border-med-border p-4 sm:p-6">
         <h2 className="text-xl font-semibold text-med-primary-900">
-          Registrar nuevo médico
+          {doctor ? 'Editar médico' : 'Registrar nuevo médico'}
         </h2>
         <p className="mt-1 text-sm text-med-text-sub">
           Completá el nombre, la especialidad y la matrícula del profesional.
@@ -122,4 +126,8 @@ export default function DoctorForm({ specialties = [], onSubmit, onCancel }) {
       </form>
     </Card>
   );
+}
+
+export default function DoctorForm({ doctor, ...props }) {
+  return <DoctorFields key={doctor?.id ?? 'new'} doctor={doctor} {...props} />;
 }
