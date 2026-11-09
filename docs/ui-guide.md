@@ -33,23 +33,33 @@ Definidos en `@theme`, dentro de `src/index.css`. Se usan como clases: `bg-med-b
 | Texto           | `med-text-main`, `med-text-sub`, `med-text-muted`                        |
 | Estado activo   | `med-active-bg`, `med-active-text`                                       |
 | Estado de aviso | `med-leave-bg`, `med-leave-text`                                         |
-| Estado de error | `med-danger-bg`, `med-danger-text`                                       |
-
-> **Pendiente de F06:** la escala `med-primary` no está ordenada, porque `800` es más oscuro que `900`. Evitar nuevos usos de `800` hasta que se corrija.
+| Estado de error | `med-danger-bg`, `med-danger-text`, `med-danger-hover`                   |
 
 ## Componentes
 
-| Componente                                                                                  | Props principales                                                         | Estado                                    |
-| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------- |
-| `Button`                                                                                    | `variant`: `default`, `secondary`, `outline`, `ghost`, `danger`           | Disponible; F06 ajusta `danger` a tokens  |
-| `Card`                                                                                      | `className`, `children`                                                   | Disponible                                |
-| `Input`                                                                                     | `label`, `error`                                                          | Disponible; F06 ajusta errores y etiqueta |
-| `TablePagination`                                                                           | Hoy `currentPage`, `totalPages`, `totalItems`, `pageSize`, `onPageChange` | F08 lo pasa a `pageIndex` base 0          |
-| `PageHeader`, `SearchInput`, `Select`, `Textarea`, `StatusBadge`, `DataTable`, `EmptyState` | Las define F06                                                            | Pendiente de F06                          |
-| `Modal`, `ConfirmDialog`, `FormMessage`                                                     | Las define F07                                                            | Pendiente de F07                          |
+| Componente                              | Props principales                                                         | Estado                           |
+| --------------------------------------- | ------------------------------------------------------------------------- | -------------------------------- |
+| `Button`                                | `variant` admite `default`, `secondary`, `outline`, `ghost` y `danger`    | Disponible                       |
+| `Card`                                  | `className`, `children`                                                   | Disponible                       |
+| `Input`                                 | `label`, `error`, `id`, props nativas de input                            | Disponible                       |
+| `TablePagination`                       | Hoy `currentPage`, `totalPages`, `totalItems`, `pageSize`, `onPageChange` | F08 lo pasa a `pageIndex` base 0 |
+| `PageHeader`                            | `title`, `description`, `actions`                                         | Disponible                       |
+| `SearchInput`                           | Props de `Input`, con tipo de búsqueda y etiqueta predeterminada «Buscar» | Disponible                       |
+| `Select`                                | `label`, `error`, `id`, opciones como hijos y props nativas de select     | Disponible                       |
+| `Textarea`                              | `label`, `error`, `id`, `rows` y props nativas de textarea                | Disponible                       |
+| `StatusBadge`                           | `status` recibe el estado de turno de la API                              | Disponible                       |
+| `DataTable`                             | `caption`, `columns`, `rows`, `getRowKey`, `emptyMessage`                 | Disponible                       |
+| `EmptyState`                            | `title`, `description`, `action`                                          | Disponible                       |
+| `Modal`, `ConfirmDialog`, `FormMessage` | Las define F07                                                            | Pendiente de F07                 |
 
 Quien complete una de esas tareas actualiza esta tabla en el mismo PR.
 
+Pasar `{...register('campo')}` a `Input`, `Select` o `Textarea` y el mensaje de validación a `error`. Cada campo vincula su etiqueta y el error con el control nativo.
+
+En `DataTable`, cada columna recibe `key`, `header` y, cuando haga falta, `render(row)`. Las filas usan `row.id` como clave por defecto. Si el recurso tiene otro identificador, pasar `getRowKey`. La tabla permite desplazamiento horizontal dentro de su contenedor en pantallas angostas.
+
+En `shared/helpers/formatDate.js`, `formatDate` presenta fechas `YYYY-MM-DD` con formato argentino sin desplazarlas por zona horaria. `formatTime` muestra horas `HH:mm` a partir de valores `HH:mm` o `HH:mm:ss`. Ambos devuelven una cadena vacía si el valor es inválido.
+
 ## Mockups
 
-Las imágenes están en `docs/mockups/`, y `AGENTS.md` tiene el índice. Si el mockup muestra datos que el backend no tiene, se omiten según las decisiones de `docs/tasks/README.md`.
+Las imágenes están en `docs/mockups/`. El índice y las decisiones sobre datos sin respaldo en el backend están en `docs/tasks/README.md`.
