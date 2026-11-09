@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Card from '../../shared/components/Card';
 import Button from '../../shared/components/Button';
+import DoctorDetailModal from '../components/DoctorDetailModal';
 
 function DoctorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
   const doctorsList = [
     {
@@ -196,7 +198,7 @@ function DoctorsPage() {
                       <button
                         title="Ver detalle"
                         className="p-1.5 rounded-lg hover:bg-med-primary-50 text-med-primary-600 hover:text-med-primary-900 transition"
-                        onClick={() => alert(`Ver detalle de ${doc.name}`)}
+                        onClick={() => setSelectedDoctor(doc)}
                       >
                         <svg
                           className="w-4 h-4"
@@ -281,6 +283,10 @@ function DoctorsPage() {
           </div>
         </div>
       </Card>
+      <DoctorDetailModal
+        doctor={selectedDoctor}
+        onClose={() => setSelectedDoctor(null)}
+      />
     </div>
   );
 }
