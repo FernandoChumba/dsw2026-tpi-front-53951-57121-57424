@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import useAuth from '../../auth/hook/useAuth';
-import { frontendErrorMessage } from '../../auth/helpers/backendError';
+import { getApiError } from '../../shared/helpers/apiError';
 
 function PatientLoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -15,28 +15,15 @@ function PatientLoginPage() {
   } = useForm({ defaultValues: { username: '', password: '' } });
 
   const navigate = useNavigate();
-  const { singinPatient } = useAuth();
+  const { signInPatient } = useAuth();
 
   const onValid = async (formData) => {
     try {
-      const { error } = await singinPatient(
-        formData.username,
-        formData.password
-      );
-
-      if (error) {
-        setErrorMessage(error.frontendErrorMessage || 'Credenciales inválidas');
-
-        return;
-      }
-
+      // Provisorio hasta F11: el segundo campo del formulario se envía como DNI.
+      await signInPatient(formData.username, formData.password);
       navigate('/');
     } catch (error) {
-      if (error?.response?.data?.code) {
-        setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
-      } else {
-        setErrorMessage('Error al conectar con el servicio de pacientes');
-      }
+      setErrorMessage(getApiError(error).message);
     }
   };
 
@@ -208,13 +195,6 @@ function PatientLoginPage() {
           <Button type="submit" className="w-full mt-1">
             Ingresar Paciente
           </Button>
-
-          <div className="bg-med-primary-50 border border-med-primary-200/60 rounded-lg p-2.5 text-center text-xs text-med-primary-900">
-            <span className="font-semibold">Credenciales de prueba:</span>
-            <br />
-            Email: <code>paciente@medportal.com</code> | Clave:{' '}
-            <code>paciente123</code>
-          </div>
 
           {errorMessage && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 text-center">

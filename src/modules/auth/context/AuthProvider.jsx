@@ -1,94 +1,70 @@
 import { createContext, useState } from 'react';
-import { login } from '../services/login';
 import { loginAdmin } from '../services/adminLogin';
 import { loginPatient } from '../services/patientLogin';
+import { logout } from '../services/logout';
 
 const AuthContext = createContext();
 
+// Claves de la sesión en localStorage. Guardarlas ahí hace que la sesión
+// sobreviva a recargar la página.
+// El JWT no trae el DNI del paciente, por eso se guarda desde el login.
+const SESSION_KEYS = ['token', 'role', 'dni'];
+
+const readSession = () => ({
+  token: localStorage.getItem('token'),
+  role: localStorage.getItem('role'),
+  dni: localStorage.getItem('dni'),
+});
+
 function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const token = localStorage.getItem('token');
+  const [session, setSession] = useState(readSession);
 
-    return Boolean(token);
-  });
-
-  const singout = () => {
-    localStorage.clear();
-    setIsAuthenticated(false);
-  };
-
-  const setAuthSession = (token) => {
+  const saveSession = ({ token, role, dni = null }) => {
     localStorage.setItem('token', token);
-    setIsAuthenticated(true);
+    localStorage.setItem('role', role);
+
+    if (dni) localStorage.setItem('dni', dni);
+    else localStorage.removeItem('dni');
+
+    setSession({ token, role, dni });
   };
 
-  const singin = async (username, password) => {
-    const { data, error } = await login(username, password);
+  // Los errores de login no se capturan acá: los muestra cada página con
+  // getApiError (credenciales inválidas, demasiados intentos, etc.).
+  const signInAdmin = async (email, password) => {
+    const { token, role } = await loginAdmin(email, password);
 
-    if (error) {
-      return { error };
-    }
-
-    setAuthSession(data);
-
-    return { error: null };
+    saveSession({ token, role });
   };
 
-  const singinAdmin = async (username, password) => {
-    if (
-      (username === 'admin' ||
-        username === 'admin@medportal.com' ||
-        username === 'admin@test.com') &&
-      password === 'admin123'
-    ) {
-      setAuthSession('mock-admin-token-12345');
+  const signInPatient = async (email, dni) => {
+    const { token, role } = await loginPatient(email, dni);
 
-      return { error: null };
-    }
-
-    const { data, error } = await loginAdmin(username, password);
-
-    if (error) {
-      return { error };
-    }
-
-    setAuthSession(data);
-
-    return { error: null };
+    saveSession({ token, role, dni: String(dni) });
   };
 
-  const singinPatient = async (username, password) => {
-    if (
-      (username === 'paciente' ||
-        username === 'paciente@medportal.com' ||
-        username === 'paciente@test.com') &&
-      password === 'paciente123'
-    ) {
-      setAuthSession('mock-patient-token-67890');
-
-      return { error: null };
+  // Avisa al backend para que revoque el token, pero limpia la sesión local
+  // aunque esa petición falle (por ejemplo, si el token ya venció).
+  const signOut = async () => {
+    try {
+      await logout();
+    } catch {
+      // Sin acción: la sesión local se limpia igual.
+    } finally {
+      SESSION_KEYS.forEach((key) => localStorage.removeItem(key));
+      setSession({ token: null, role: null, dni: null });
     }
-
-    const { data, error } = await loginPatient(username, password);
-
-    if (error) {
-      return { error };
-    }
-
-    setAuthSession(data);
-
-    return { error: null };
   };
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
-        singin,
-        singinAdmin,
-        singinPatient,
-        singout,
-        setAuthSession,
+        isAuthenticated: Boolean(session.token),
+        role: session.role,
+        dni: session.dni,
+        signInAdmin,
+        signInPatient,
+        signOut,
       }}
     >
       {children}

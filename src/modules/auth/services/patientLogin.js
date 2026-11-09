@@ -1,19 +1,12 @@
 import { instance } from '../../shared/api/axiosInstance';
 
-export const loginPatient = async (username, password) => {
-  if (
-    (username === 'paciente' ||
-      username === 'paciente@medportal.com' ||
-      username === 'paciente@test.com') &&
-    password === 'paciente123'
-  ) {
-    return { data: 'mock-patient-token-67890', error: null };
-  }
-
-  const response = await instance.post('api/patient/auth/login', {
-    username,
-    password,
+// POST /api/auth/patient/login → { token, role: 'PACIENTE' }.
+// El primer login crea al paciente. El DNI viaja como texto.
+export async function loginPatient(email, dni) {
+  const response = await instance.post('api/auth/patient/login', {
+    email,
+    dni: String(dni),
   });
 
-  return { data: response.data.token, error: null };
-};
+  return response.data;
+}
