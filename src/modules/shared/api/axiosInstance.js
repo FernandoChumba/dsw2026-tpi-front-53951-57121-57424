@@ -23,9 +23,10 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-// Los endpoints de login terminan en '/auth/login'
-// (por ejemplo, 'api/admin/auth/login' y 'api/patient/auth/login').
-const isLoginRequest = (config) => /\/?auth\/login$/.test(config?.url ?? '');
+// Los endpoints de login del backend son 'api/auth/admin/login' y
+// 'api/auth/patient/login': cualquier ruta 'auth/.../login' cuenta como login.
+const isLoginRequest = (config) =>
+  /(^|\/)auth\/(.+\/)?login$/.test(config?.url ?? '');
 
 // Login al que se vuelve según el área en la que está el usuario.
 const getLoginPath = () =>
