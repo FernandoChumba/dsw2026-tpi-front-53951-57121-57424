@@ -5,9 +5,10 @@ import { getApiError } from '../../shared/helpers/apiError';
 import DoctorForm from '../components/DoctorForm';
 import { getAllSpecialties } from '../../specialties/services/getSpecialties';
 import { createDoctor } from '../services/createDoctor';
+import { getDoctor } from '../services/getDoctor';
+import { updateDoctor } from '../services/updateDoctor';
 
-export default function DoctorFormPage() {
-  const { id } = useParams();
+function DoctorFormContent({ id }) {
   const navigate = useNavigate();
   const [catalog, setCatalog] = useState({
     specialties: [],
@@ -20,10 +21,13 @@ export default function DoctorFormPage() {
 
     async function load() {
       try {
-        const specialties = await getAllSpecialties(controller.signal);
+        const [specialties, doctor] = await Promise.all([
+          getAllSpecialties(controller.signal),
+          id ? getDoctor(id, controller.signal) : null,
+        ]);
 
         if (!controller.signal.aborted)
-          setCatalog({ specialties, error: '', loading: false });
+          setCatalog({ specialties, doctor, error: '', loading: false });
       } catch (error) {
         if (!controller.signal.aborted)
           setCatalog({
@@ -34,21 +38,25 @@ export default function DoctorFormPage() {
       }
     }
 
-    if (!id) load();
+    load();
 
     return () => controller.abort();
   }, [id]);
 
   async function save(values) {
-    await createDoctor(values);
+    if (id) await updateDoctor(id, values);
+    else await createDoctor(values);
+
     navigate('/admin/doctors', {
-      state: { doctorMessage: 'Médico registrado correctamente.' },
+      state: {
+        doctorMessage: id
+          ? 'Médico actualizado correctamente.'
+          : 'Médico registrado correctamente.',
+      },
     });
   }
 
-  if (id) return <h1 className="text-xl font-semibold">Editar médico</h1>;
-
-  if (catalog.loading) return <p role="status">Cargando especialidades…</p>;
+  if (catalog.loading) return <p role="status">Cargando datos…</p>;
 
   if (catalog.error)
     return (
@@ -60,9 +68,16 @@ export default function DoctorFormPage() {
 
   return (
     <DoctorForm
+      doctor={catalog.doctor}
       specialties={catalog.specialties}
       onSubmit={save}
       onCancel={() => navigate('/admin/doctors')}
     />
   );
+}
+
+export default function DoctorFormPage() {
+  const { id } = useParams();
+
+  return <DoctorFormContent key={id ?? 'new'} id={id} />;
 }
