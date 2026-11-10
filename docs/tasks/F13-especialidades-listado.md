@@ -55,3 +55,11 @@ Mostrar las especialidades reales con búsqueda y paginación por servidor.
 
 - Probar con los datos de F04 y con más de una página.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Columna "Estado":** el backend no tiene estado para especialidades. Si se muestra algo, es solo texto informativo, nunca un botón (activar/desactivar va en "Acciones").
+- **Acciones:** íconos del mismo estilo (editar, eliminar). El profe criticó mezclar ícono, texto y fondo.
+- **Tabla:** reutilizar `DataTable` y `TablePagination`. "Si tenés código duplicado de tablas en varios lados, no estás aplicando Atomic Design".
+- **Service:** `specialties/services/getSpecialties.js` ya existe (PR #19) con `getSpecialties({ pageIndex, pageSize, name })`. Usarlo, no crear otro.
+- **Hook:** la lógica va en `useSpecialties`; la página solo dibuja. Sin arrays fijos.

@@ -54,3 +54,9 @@ Reutilizar el formulario para editar una especialidad existente.
 
 - Probar edición válida, inválida, cancelar e ID inexistente.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Misma página que el alta:** `SpecialtyFormPage` con `key={id ?? 'new'}`, igual que `DoctorFormPage`.
+- **Datos:** el `GET` y el `PUT` van en `useSpecialtyForm`, no en la página.
+- **Id inexistente (404):** mostrar el mensaje y el enlace "Volver al listado", como en médicos.

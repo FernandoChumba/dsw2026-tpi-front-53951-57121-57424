@@ -50,3 +50,8 @@ Paginar los resultados y mostrar el detalle de un turno.
 
 - Probar más de una página y el detalle de varias filas.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Paginación:** la información viene del backend (`total`, `pageIndex`, `pageSize`) y se pasa a `TablePagination`. No recalcularla en el front.
+- **Detalle:** usar el `Modal` compartido.

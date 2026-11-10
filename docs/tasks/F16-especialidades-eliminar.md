@@ -50,3 +50,9 @@ Reemplazar el `alert` por una baja lógica confirmada.
 
 - Probar cancelar, confirmar y eliminar la última fila de una página.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Baja lógica:** la hace el backend ("no hagas un delete, hacé un update"). El front solo llama al `DELETE`.
+- **Dónde va la llamada:** en el hook (`removeSpecialty` en `useSpecialties`), igual que `removeDoctor` en `useDoctors` (PR #20). La página solo confirma con `ConfirmDialog` y muestra el aviso.
+- **Archivos permitidos:** sumar `src/modules/specialties/hooks/useSpecialties.js`.

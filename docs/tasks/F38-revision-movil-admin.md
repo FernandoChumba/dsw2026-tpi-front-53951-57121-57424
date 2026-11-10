@@ -52,3 +52,10 @@ Verificar en móvil y con teclado las pantallas de administración.
 
 - Adjuntar capturas a 360 px y recorrer un formulario solo con teclado.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **⚠️ Cambio de alcance:** el profe dijo que el **admin no es responsive**. Se usa desde escritorio, notebook o, como mucho, tablet, con un mínimo de **600–700 px**. Por eso:
+  - Ya no se revisa el admin en el celular.
+  - Se verifica que las pantallas de admin funcionen bien desde **700 px** de ancho.
+  - La parte de **teclado** sigue igual (foco visible, Escape en modales, navegación con Tab).

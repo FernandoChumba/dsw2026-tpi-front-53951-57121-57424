@@ -58,3 +58,9 @@ Validar el horario y enviarlo: el backend genera los bloques de 30 minutos.
 - Guardar y comprobar los bloques en `GET /api/availability-slots`.
 - Editar con una reserva activa y comprobar que sigue.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Mensaje de éxito arriba** del formulario: el profe aprobó "Disponibilidad horaria configurada con éxito".
+- **Dónde va la llamada:** el `POST`/`PUT` va en el hook (`useDoctorAvailability`), no en la página.
+- **Página propia:** la pantalla sigue siendo una página con el médico elegido por URL (`?doctorId=`), no un modal. Ya está así.

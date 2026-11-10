@@ -59,3 +59,10 @@ Conectar la búsqueda avanzada de turnos con el backend.
 
 - Probar cada filtro solo y combinado.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Query params:** los filtros se mandan como query params (`params` de axios). En la defensa el profe va a preguntar qué usa el backend para leerlos: `[FromQuery]` en el controller.
+- **"Limpiar":** vacía los filtros y hace una llamada nueva.
+- **Alcance:** no agregar filtros que el enunciado no pide (se lo marcó a otro grupo).
+- **Tabla:** reutilizar `DataTable`, sin duplicar la tabla. La lógica va en `useAppointmentSearch`.

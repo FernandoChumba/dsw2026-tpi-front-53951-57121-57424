@@ -55,3 +55,10 @@ Dar de alta especialidades desde el formulario del mockup.
 
 - Probar caso válido, vacío, inválido y cancelar.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Página propia** con URL (`/admin/specialties/new`), no un modal: "el mockup siempre es tu base".
+- **"Estado inicial" del mockup:** el backend no lo tiene, no agregarlo.
+- **Patrón a seguir:** el de médicos. `useSpecialtyForm` hace la carga y el guardado; `SpecialtyForm` es el formulario con React Hook Form, con el error del backend debajo del campo. Ver `doctors/hooks/useDoctorForm.js` y `doctors/components/DoctorForm.jsx` (PR #20).
+- **Archivos permitidos:** sumar `src/modules/specialties/hooks/useSpecialtyForm.js`. La página no llama a services directo.

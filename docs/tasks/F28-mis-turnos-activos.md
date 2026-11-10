@@ -54,3 +54,9 @@ Mostrar los turnos activos reales del paciente.
 
 - Probar paciente con y sin turnos.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Paciente mobile-first:** es obligatorio. En el celular las tablas se convierten en listas o tarjetas: "en mobile no entran tablas".
+- **DNI:** usar el `dni` de `useAuth()`. No leer `localStorage` directo: la sesión vive solo en `shared/helpers/session.js` (PR #20).
+- **Hook:** la lógica va en un hook; la página solo dibuja.

@@ -52,3 +52,8 @@ Cancelar un turno y liberar su horario.
 
 - Cancelar y comprobar que el bloque reaparece en la reserva.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Confirmación:** cancelar con `ConfirmDialog`. La llamada al `DELETE` va en el hook, no en la página (como `removeDoctor`).
+- **Celular:** el botón de cancelar tiene que verse y usarse bien en la lista móvil.
