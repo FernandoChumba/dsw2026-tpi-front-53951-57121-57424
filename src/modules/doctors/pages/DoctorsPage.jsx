@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../../shared/components/Button';
+import ConfirmDialog from '../../shared/components/ConfirmDialog';
 import FormMessage from '../../shared/components/FormMessage';
 import Card from '../../shared/components/Card';
 import DataTable from '../../shared/components/DataTable';
@@ -9,6 +10,7 @@ import PageHeader from '../../shared/components/PageHeader';
 import SearchInput from '../../shared/components/SearchInput';
 import TablePagination from '../../shared/components/TablePagination';
 import DoctorDetailModal from '../components/DoctorDetailModal';
+import { deleteDoctor } from '../services/deleteDoctor';
 import useDoctors, { MIN_SEARCH_LENGTH } from '../hooks/useDoctors';
 
 // Enlaces con el mismo aspecto que Button: navegan a otra pantalla, por eso
@@ -30,6 +32,10 @@ const columns = [
 
 function DoctorsPage() {
   const { state } = useLocation();
+  const [doctorToRemove, setDoctorToRemove] = useState(null);
+  // Aviso de éxito: llega del formulario al guardar, o se muestra al eliminar.
+  // Se borra al buscar o cambiar de página, para que no quede siempre visible.
+  const [notice, setNotice] = useState(state?.doctorMessage ?? '');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const columnsWithActions = [
     ...columns,
@@ -47,6 +53,9 @@ function DoctorsPage() {
           >
             Editar
           </Link>
+          <Button variant="danger" onClick={() => setDoctorToRemove(doctor)}>
+            Eliminar
+          </Button>
         </div>
       ),
     },
@@ -64,6 +73,22 @@ function DoctorsPage() {
     changePage,
     reload,
   } = useDoctors();
+
+  async function confirmRemoval() {
+    await deleteDoctor(doctorToRemove.id);
+    setNotice('Médico eliminado correctamente.');
+
+    if (doctors.length === 1 && pageIndex > 0) {
+      changePage(pageIndex - 1);
+    } else {
+      reload();
+    }
+  }
+
+  function goToPage(index) {
+    setNotice('');
+    changePage(index);
+  }
 
   // Contenido de la tabla según el estado de la consulta.
   function renderContent() {
@@ -106,9 +131,7 @@ function DoctorsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      {state?.doctorMessage && (
-        <FormMessage type="success">{state.doctorMessage}</FormMessage>
-      )}
+      {notice && <FormMessage type="success">{notice}</FormMessage>}
       <PageHeader
         title="Directorio de médicos"
         description="Gestioná el personal médico y su disponibilidad."
@@ -129,7 +152,10 @@ function DoctorsPage() {
           label="Buscar médico"
           placeholder="Buscar médico por nombre…"
           value={search}
-          onChange={(event) => changeSearch(event.target.value)}
+          onChange={(event) => {
+            setNotice('');
+            changeSearch(event.target.value);
+          }}
           error={
             isSearchTooShort
               ? `Ingresá al menos ${MIN_SEARCH_LENGTH} caracteres para buscar.`
@@ -144,9 +170,20 @@ function DoctorsPage() {
           pageIndex={pageIndex}
           pageSize={pageSize}
           total={total}
-          onPageChange={changePage}
+          onPageChange={goToPage}
         />
       </Card>
+      <ConfirmDialog
+        isOpen={Boolean(doctorToRemove)}
+        title="Eliminar médico"
+        description={
+          doctorToRemove ? `¿Querés eliminar a ${doctorToRemove.name}?` : ''
+        }
+        confirmLabel="Eliminar"
+        variant="danger"
+        onClose={() => setDoctorToRemove(null)}
+        onConfirm={confirmRemoval}
+      />
       <DoctorDetailModal
         doctor={selectedDoctor}
         onClose={() => setSelectedDoctor(null)}
