@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Button from '../../shared/components/Button';
+import FormMessage from '../../shared/components/FormMessage';
 import Card from '../../shared/components/Card';
 import DataTable from '../../shared/components/DataTable';
 import EmptyState from '../../shared/components/EmptyState';
@@ -26,6 +27,7 @@ const columns = [
 ];
 
 function DoctorsPage() {
+  const { state } = useLocation();
   const {
     doctors,
     total,
@@ -81,6 +83,9 @@ function DoctorsPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      {state?.doctorMessage && (
+        <FormMessage type="success">{state.doctorMessage}</FormMessage>
+      )}
       <PageHeader
         title="Directorio de médicos"
         description="Gestioná el personal médico y su disponibilidad."
