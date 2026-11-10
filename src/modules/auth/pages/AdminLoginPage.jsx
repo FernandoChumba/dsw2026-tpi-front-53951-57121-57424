@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hook/useAuth';
-import { frontendErrorMessage } from '../helpers/backendError';
+import { getApiError } from '../../shared/helpers/apiError';
 
 function AdminLoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -15,27 +15,15 @@ function AdminLoginPage() {
   } = useForm({ defaultValues: { username: '', password: '' } });
 
   const navigate = useNavigate();
-  const { singinAdmin } = useAuth();
+  const { signInAdmin } = useAuth();
 
   const onValid = async (formData) => {
     try {
-      const { error } = await singinAdmin(formData.username, formData.password);
-
-      if (error) {
-        setErrorMessage(
-          error.frontendErrorMessage || 'Credenciales administrativas inválidas'
-        );
-
-        return;
-      }
-
+      // El campo del formulario se llama username, pero es el correo.
+      await signInAdmin(formData.username, formData.password);
       navigate('/admin/home');
     } catch (error) {
-      if (error?.response?.data?.code) {
-        setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
-      } else {
-        setErrorMessage('Error al conectar con el servicio administrativo');
-      }
+      setErrorMessage(getApiError(error).message);
     }
   };
 
@@ -216,13 +204,6 @@ function AdminLoginPage() {
               <span>Iniciar Sesión</span>
               <span className="text-sm">→</span>
             </button>
-
-            <div className="bg-med-primary-50 border border-med-primary-200/60 rounded-lg p-2.5 text-center text-xs text-med-primary-900">
-              <span className="font-semibold">Credenciales de prueba:</span>
-              <br />
-              Email: <code>admin@medportal.com</code> | Clave:{' '}
-              <code>admin123</code>
-            </div>
 
             {/* Error Message */}
             {errorMessage && (
