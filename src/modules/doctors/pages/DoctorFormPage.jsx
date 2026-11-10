@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import FormMessage from '../../shared/components/FormMessage';
 import { getApiError } from '../../shared/helpers/apiError';
 import DoctorForm from '../components/DoctorForm';
-import { createDoctor, getDoctorSpecialties } from '../services/createDoctor';
+import { getAllSpecialties } from '../../specialties/services/getSpecialties';
+import { createDoctor } from '../services/createDoctor';
 import { getDoctor } from '../services/getDoctor';
 import { updateDoctor } from '../services/updateDoctor';
 
@@ -21,7 +22,7 @@ function DoctorFormContent({ id }) {
     async function load() {
       try {
         const [specialties, doctor] = await Promise.all([
-          getDoctorSpecialties(controller.signal),
+          getAllSpecialties(controller.signal),
           id ? getDoctor(id, controller.signal) : null,
         ]);
 
@@ -55,7 +56,7 @@ function DoctorFormContent({ id }) {
     });
   }
 
-  if (catalog.loading) return <p role="status">Cargando especialidades…</p>;
+  if (catalog.loading) return <p role="status">Cargando datos…</p>;
 
   if (catalog.error)
     return (

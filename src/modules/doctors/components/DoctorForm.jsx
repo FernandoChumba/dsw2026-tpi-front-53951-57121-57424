@@ -5,6 +5,10 @@ import Card from '../../shared/components/Card';
 import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import Select from '../../shared/components/Select';
+import { getApiError } from '../../shared/helpers/apiError';
+
+// Campos del formulario que pueden recibir un error del backend.
+const FIELDS = ['name', 'licenseNumber', 'specialtyId'];
 
 function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
   const pending = useRef(false);
@@ -29,10 +33,17 @@ function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
 
     try {
       await onSubmit(values);
-    } catch {
-      setError('root', {
-        message: 'No se pudo guardar el médico. Volvé a intentar.',
-      });
+    } catch (error) {
+      // Si el backend rechaza un campo, el error se muestra debajo de ese
+      // campo; si no, se muestra un mensaje general.
+      const { message, details } = getApiError(error);
+      const fieldErrors = details.filter(({ field }) => FIELDS.includes(field));
+
+      fieldErrors.forEach(({ field, issue }) =>
+        setError(field, { message: issue })
+      );
+
+      if (fieldErrors.length === 0) setError('root', { message });
     } finally {
       pending.current = false;
     }
