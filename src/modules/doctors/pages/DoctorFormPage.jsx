@@ -8,39 +8,55 @@ import { createDoctor } from '../services/createDoctor';
 import { getDoctor } from '../services/getDoctor';
 import { updateDoctor } from '../services/updateDoctor';
 
+// Contenido de la página. Si la URL trae un id, se edita ese médico; si no,
+// se registra uno nuevo.
 function DoctorFormContent({ id }) {
   const navigate = useNavigate();
   const [catalog, setCatalog] = useState({
     specialties: [],
+    doctor: null,
     error: '',
     loading: true,
   });
 
   useEffect(() => {
-    const controller = new AbortController();
+    // Si el usuario sale de la página antes de que lleguen las respuestas,
+    // se descartan (mismo criterio que useDoctors).
+    let ignore = false;
 
     async function load() {
       try {
-        const [specialties, doctor] = await Promise.all([
-          getAllSpecialties(controller.signal),
-          id ? getDoctor(id, controller.signal) : null,
-        ]);
+        // Las especialidades se necesitan siempre, para el selector.
+        const specialties = await getAllSpecialties();
+        // El médico solo se pide al editar.
+        let doctor = null;
 
-        if (!controller.signal.aborted)
+        if (id) {
+          doctor = await getDoctor(id);
+        }
+
+        if (!ignore) {
           setCatalog({ specialties, doctor, error: '', loading: false });
+        }
       } catch (error) {
-        if (!controller.signal.aborted)
+        // Por ejemplo, un id que no existe responde 404 y se muestra
+        // "El elemento buscado no existe." con el enlace al listado.
+        if (!ignore) {
           setCatalog({
             specialties: [],
+            doctor: null,
             error: getApiError(error).message,
             loading: false,
           });
+        }
       }
     }
 
     load();
 
-    return () => controller.abort();
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
   async function save(values) {
@@ -76,6 +92,9 @@ function DoctorFormContent({ id }) {
   );
 }
 
+// Las rutas /admin/doctors/new y /admin/doctors/:id/edit usan esta misma
+// página. La key hace que React la arme de cero al pasar de una a otra, así el
+// formulario no conserva los datos del médico anterior.
 export default function DoctorFormPage() {
   const { id } = useParams();
 

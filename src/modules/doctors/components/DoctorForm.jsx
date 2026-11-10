@@ -10,7 +10,16 @@ import { getApiError } from '../../shared/helpers/apiError';
 // Campos del formulario que pueden recibir un error del backend.
 const FIELDS = ['name', 'licenseNumber', 'specialtyId'];
 
-function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
+// Formulario de alta y edición de médicos. Si recibe doctor, carga sus datos
+// para editarlo; si no, arranca vacío.
+export default function DoctorForm({
+  doctor,
+  specialties = [],
+  onSubmit,
+  onCancel,
+}) {
+  // pending evita el doble envío: con un useRef el cambio es inmediato, en
+  // cambio isSubmitting recién se actualiza en el próximo render.
   const pending = useRef(false);
   const {
     register,
@@ -36,14 +45,19 @@ function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
     } catch (error) {
       // Si el backend rechaza un campo, el error se muestra debajo de ese
       // campo; si no, se muestra un mensaje general.
-      const { message, details } = getApiError(error);
-      const fieldErrors = details.filter(({ field }) => FIELDS.includes(field));
+      const apiError = getApiError(error);
+      let hasFieldError = false;
 
-      fieldErrors.forEach(({ field, issue }) =>
-        setError(field, { message: issue })
-      );
+      for (const detail of apiError.details) {
+        if (FIELDS.includes(detail.field)) {
+          setError(detail.field, { message: detail.issue });
+          hasFieldError = true;
+        }
+      }
 
-      if (fieldErrors.length === 0) setError('root', { message });
+      if (!hasFieldError) {
+        setError('root', { message: apiError.message });
+      }
     } finally {
       pending.current = false;
     }
@@ -61,15 +75,7 @@ function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
       </div>
       <form
         noValidate
-        onSubmit={(event) => {
-          if (pending.current) {
-            event.preventDefault();
-
-            return;
-          }
-
-          return handleSubmit(submit)(event);
-        }}
+        onSubmit={handleSubmit(submit)}
         className="flex flex-col gap-4 p-4 sm:p-6"
       >
         <Input
@@ -136,8 +142,4 @@ function DoctorFields({ doctor, specialties = [], onSubmit, onCancel }) {
       </form>
     </Card>
   );
-}
-
-export default function DoctorForm({ doctor, ...props }) {
-  return <DoctorFields key={doctor?.id ?? 'new'} doctor={doctor} {...props} />;
 }
