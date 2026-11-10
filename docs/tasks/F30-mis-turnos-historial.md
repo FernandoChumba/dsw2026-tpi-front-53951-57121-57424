@@ -54,3 +54,8 @@ Mostrar el historial paginado del paciente.
 
 - Cancelar un turno y verlo en el historial, también a 360 px.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Celular:** el historial también se ve como lista en el celular, no como tabla.
+- **Paginación:** sale de los datos del backend (`total`, `pageIndex`) con `TablePagination`.

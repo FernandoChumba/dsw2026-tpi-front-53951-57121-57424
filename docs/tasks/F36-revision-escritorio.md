@@ -50,3 +50,12 @@ Comparar cada pantalla con su mockup y corregir las diferencias.
 
 - Adjuntar capturas a 1366 px de cada pantalla modificada.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Base:** "el mockup siempre es tu base".
+- **Ancho:** el admin se diseña para escritorio, con un mínimo de **600–700 px**; no hace falta que funcione en el celular.
+- **Acciones:** íconos del mismo estilo (ver, editar, eliminar), no botones de texto grandes.
+- **Columna "Estado":** solo informativa.
+- **Íconos:** se pueden usar de una librería (Lucide) si se parecen a los del mockup.
+- **Diferencias ya relevadas:** buscador al lado del título, especialidad como etiqueta, paginación con números, ruta de navegación (breadcrumb) en formularios y disponibilidad.

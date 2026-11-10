@@ -51,3 +51,9 @@ Unificar los textos y formatos de toda la aplicación.
 
 - Recorrer todas las pantallas con ambos roles.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Nombre del menú:** "Panel", no "Tablero".
+- **Columna "Estado":** texto informativo (badge), nunca un botón.
+- **Íconos:** tienen que tener sentido (un calendario para fechas, etc.). Se puede usar Lucide o Google Icons si se parecen a los del mockup; si no, el SVG como componente propio.

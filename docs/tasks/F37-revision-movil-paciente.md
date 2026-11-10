@@ -50,3 +50,9 @@ Verificar en móvil el flujo completo del paciente.
 
 - Adjuntar capturas a 360 px y 390 px.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Responsive:** el paciente es la única parte que tiene que ser responsive (mobile-first).
+- **Tablas:** en el celular pasan a listas o tarjetas.
+- **Referencia:** el mockup p29 deja "Confirmar Turno" fijo abajo.

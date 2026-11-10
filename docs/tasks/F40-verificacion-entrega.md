@@ -45,3 +45,8 @@ Dejar el proyecto sin errores de herramientas ni de consola.
 
 - Registrar el resultado de los tres comandos en el PR.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Evaluación:** el profe corre `lint` y `build` sobre el proyecto: no puede haber errores.
+- **Revisión de patrones:** probablemente use un prompt para revisar si se respetan los patrones (página → hook → service, Atomic Design, sin código duplicado).

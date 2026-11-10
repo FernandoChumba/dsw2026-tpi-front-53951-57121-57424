@@ -54,3 +54,9 @@ Conectar los accesos rápidos y retirar los controles sin función.
 - Recorrer todos los enlaces con ambos roles.
 - `grep -rn "alert(" src` no devuelve resultados.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Nombre del menú:** el ítem se llama **"Panel"** (o "Panel principal"), no "Tablero" ni "Dashboard".
+- **URLs:** en un solo idioma (inglés, como las actuales); no mezclar.
+- **Protección por rol:** ya está en PR #20 (`ProtectedRoute` con `role`). No tocarla en esta tarea.

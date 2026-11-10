@@ -54,3 +54,8 @@ Reemplazar los números inventados del panel por datos reales.
 
 - Comparar los indicadores con las respuestas de la API.
 - Ejecutar `npm run build`, `npm run lint` y `npm run format:check` y registrar el resultado en el PR.
+
+## Aclaraciones del profe (consultas de noviembre)
+
+- **Nueva UI en camino:** el profe va a publicar una nueva versión de la UI y puede cambiar indicadores. No agregar indicadores que no estén en esta tarjeta.
+- **Indicadores de la p24 (listado de médicos):** "Disponibles" y "Emergencias" se sacan. "Total consultas hoy" se puede calcular, pero todavía no está definido. Queda fuera de esta tarjeta.
