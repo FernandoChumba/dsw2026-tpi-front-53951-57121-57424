@@ -4,7 +4,7 @@ import { instance } from '../../shared/api/axiosInstance';
 // El backend pagina: pageIndex empieza en 0 y pageSize va de 1 a 100.
 // Devuelve { pageSize, pageIndex, data, total }, donde cada elemento de data es
 // { id, name, description }.
-export async function getSpecialties({ pageIndex, pageSize, name }, signal) {
+export async function getSpecialties({ pageIndex, pageSize, name }) {
   const params = { pageIndex, pageSize };
 
   // name se envía solo si tiene contenido: con menos de 3 caracteres responde 400.
@@ -12,21 +12,26 @@ export async function getSpecialties({ pageIndex, pageSize, name }, signal) {
     params.name = name;
   }
 
-  const response = await instance.get('api/specialties', { params, signal });
+  const response = await instance.get('api/specialties', { params });
 
   return response.data;
 }
 
-// Trae todas las especialidades, página por página, para los selectores.
-export async function getAllSpecialties(signal) {
+// Trae todas las especialidades para los selectores.
+// El backend devuelve como máximo 100 por página, así que se piden las páginas
+// una por una hasta tener el total.
+export async function getAllSpecialties() {
   const pageSize = 100;
-  const firstPage = await getSpecialties({ pageIndex: 0, pageSize }, signal);
-  const remainingPages = Math.max(0, Math.ceil(firstPage.total / pageSize) - 1);
-  const pages = await Promise.all(
-    Array.from({ length: remainingPages }, (_, index) =>
-      getSpecialties({ pageIndex: index + 1, pageSize }, signal)
-    )
-  );
+  let pageIndex = 0;
+  let specialties = [];
+  let page;
 
-  return [firstPage, ...pages].flatMap(({ data }) => data);
+  do {
+    page = await getSpecialties({ pageIndex, pageSize });
+    specialties = specialties.concat(page.data);
+    pageIndex++;
+    // Si una página llega vacía se corta, para no quedar en un bucle infinito.
+  } while (page.data.length > 0 && specialties.length < page.total);
+
+  return specialties;
 }
