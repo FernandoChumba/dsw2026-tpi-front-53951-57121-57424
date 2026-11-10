@@ -16,15 +16,20 @@ const readSession = () => ({
   dni: localStorage.getItem('dni'),
 });
 
+// Guarda el valor, o borra la clave si no hay valor. Así nunca queda
+// guardado el texto "undefined" o "null" en localStorage.
+const storeOrRemove = (key, value) => {
+  if (value) localStorage.setItem(key, value);
+  else localStorage.removeItem(key);
+};
+
 function AuthProvider({ children }) {
   const [session, setSession] = useState(readSession);
 
-  const saveSession = ({ token, role, dni = null }) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('role', role);
-
-    if (dni) localStorage.setItem('dni', dni);
-    else localStorage.removeItem('dni');
+  const saveSession = ({ token, role = null, dni = null }) => {
+    storeOrRemove('token', token);
+    storeOrRemove('role', role);
+    storeOrRemove('dni', dni);
 
     setSession({ token, role, dni });
   };
