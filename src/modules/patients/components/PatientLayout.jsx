@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
+import { getInitials } from '../../shared/helpers/getInitials';
 
 function PatientLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  // Los datos del usuario logueado salen de la sesión (useAuth), no se
+  // escriben a mano en el layout.
+  const { signOut, email } = useAuth();
 
   const handleLogout = async () => {
     await signOut();
@@ -85,10 +88,10 @@ function PatientLayout() {
             {/* Avatar Paciente */}
             <div className="flex items-center gap-2.5 pl-2 sm:border-l sm:border-med-border">
               <div className="w-8 h-8 rounded-full bg-med-primary-100 text-med-primary-900 font-bold text-xs flex items-center justify-center border border-med-primary-200">
-                JD
+                {getInitials(email)}
               </div>
               <span className="hidden sm:inline-block text-xs font-semibold text-med-text-main">
-                Johnathan Doe
+                {email}
               </span>
             </div>
 
@@ -154,7 +157,7 @@ function PatientLayout() {
             </NavLink>
             <div className="pt-2 border-t border-med-border-subtle flex items-center justify-between">
               <span className="text-xs font-medium text-med-text-sub">
-                Paciente: Johnathan Doe
+                Paciente: {email}
               </span>
               <button
                 onClick={handleLogout}

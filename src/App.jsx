@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import { AuthProvider } from './modules/auth/context/AuthProvider';
 import ProtectedRoute from './modules/auth/components/ProtectedRoute';
+import { ROLES } from './modules/auth/constants/roles';
 
 // Auth Module
 import AdminLoginPage from './modules/auth/pages/AdminLoginPage';
@@ -40,11 +41,12 @@ const routes = [
     element: <AdminLoginPage />,
   },
 
-  // Rutas privadas de pacientes (reserva y "Mis turnos")
+  // Rutas privadas de pacientes (reserva y "Mis turnos").
+  // Requieren sesión iniciada y rol PACIENTE.
   {
     path: '/',
     element: (
-      <ProtectedRoute redirectTo="/login">
+      <ProtectedRoute role={ROLES.PATIENT} redirectTo="/login">
         <PatientLayout />
       </ProtectedRoute>
     ),
@@ -60,11 +62,12 @@ const routes = [
     ],
   },
 
-  // Rutas privadas de administración
+  // Rutas privadas de administración.
+  // Requieren sesión iniciada y rol ADMINISTRADOR.
   {
     path: '/admin',
     element: (
-      <ProtectedRoute redirectTo="/admin/login">
+      <ProtectedRoute role={ROLES.ADMIN} redirectTo="/admin/login">
         <DashboardLayout />
       </ProtectedRoute>
     ),

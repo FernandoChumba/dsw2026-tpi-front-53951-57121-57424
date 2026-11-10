@@ -10,7 +10,6 @@ import PageHeader from '../../shared/components/PageHeader';
 import SearchInput from '../../shared/components/SearchInput';
 import TablePagination from '../../shared/components/TablePagination';
 import DoctorDetailModal from '../components/DoctorDetailModal';
-import { deleteDoctor } from '../services/deleteDoctor';
 import useDoctors, { MIN_SEARCH_LENGTH } from '../hooks/useDoctors';
 
 // Enlaces con el mismo aspecto que Button: navegan a otra pantalla, por eso
@@ -72,17 +71,13 @@ function DoctorsPage() {
     changeSearch,
     changePage,
     reload,
+    removeDoctor,
   } = useDoctors();
 
+  // La baja la hace useDoctors; la página solo muestra el aviso.
   async function confirmRemoval() {
-    await deleteDoctor(doctorToRemove.id);
+    await removeDoctor(doctorToRemove.id);
     setNotice('Médico eliminado correctamente.');
-
-    if (doctors.length === 1 && pageIndex > 0) {
-      changePage(pageIndex - 1);
-    } else {
-      reload();
-    }
   }
 
   function goToPage(index) {

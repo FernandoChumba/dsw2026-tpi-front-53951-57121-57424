@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
+import { getInitials } from '../../shared/helpers/getInitials';
 
 function DashboardLayout() {
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  // Los datos del usuario logueado salen de la sesión (useAuth), no se
+  // escriben a mano en el layout.
+  const { signOut, email } = useAuth();
 
   const handleLogout = async () => {
     await signOut();
@@ -163,14 +166,14 @@ function DashboardLayout() {
           {/* User Profile Info */}
           <div className="pt-3 border-t border-med-border flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-med-primary-100 text-med-primary-900 flex items-center justify-center font-bold text-xs">
-              AD
+              {getInitials(email)}
             </div>
             <div className="overflow-hidden">
               <p className="text-xs font-semibold text-med-text-main truncate">
-                Admin User
+                {email}
               </p>
               <p className="text-[11px] text-med-text-muted truncate">
-                Super Administrator
+                Administrador
               </p>
             </div>
           </div>
