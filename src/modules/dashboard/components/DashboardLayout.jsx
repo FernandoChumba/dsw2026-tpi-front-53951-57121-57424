@@ -71,7 +71,7 @@ function DashboardLayout() {
       ),
     },
     {
-      to: '/admin/patients',
+      to: '/admin/appointments',
       label: 'Búsqueda de Pacientes',
       icon: (
         <svg

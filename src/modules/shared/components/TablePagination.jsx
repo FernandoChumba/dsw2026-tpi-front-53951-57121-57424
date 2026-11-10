@@ -1,32 +1,37 @@
 function TablePagination({
-  currentPage = 1,
-  totalPages = 1,
-  totalItems = 0,
+  pageIndex = 0,
   pageSize = 10,
+  total = 0,
   onPageChange,
 }) {
-  const from = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-  const to = Math.min(currentPage * pageSize, totalItems);
+  const lastPageIndex = Math.max(0, Math.ceil(total / pageSize) - 1);
+  const visiblePageIndex = Math.min(Math.max(pageIndex, 0), lastPageIndex);
+  const from = total === 0 ? 0 : visiblePageIndex * pageSize + 1;
+  const to = Math.min((visiblePageIndex + 1) * pageSize, total);
+  const buttonClass =
+    'min-h-11 min-w-11 rounded border border-med-border bg-med-card text-med-text-sub transition hover:bg-med-bg focus-visible:outline-2 focus-visible:outline-med-primary-600 disabled:cursor-not-allowed disabled:opacity-40';
 
   return (
-    <div className="p-4 bg-med-primary-50/50 border-t border-med-border flex items-center justify-between text-xs text-med-text-muted">
-      <span>
-        Mostrando {from} a {to} de {totalItems} registros
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-med-border bg-med-primary-50/50 p-4 text-xs text-med-text-muted">
+      <span aria-live="polite">
+        Mostrando {from} a {to} de {total} registros
       </span>
       <div className="flex items-center gap-1">
         <button
           type="button"
-          onClick={() => onPageChange && onPageChange(currentPage - 1)}
-          disabled={currentPage <= 1}
-          className="px-2.5 py-1 border border-med-border rounded bg-white text-med-text-sub hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          aria-label="Página anterior"
+          onClick={() => onPageChange?.(visiblePageIndex - 1)}
+          disabled={!onPageChange || visiblePageIndex === 0}
+          className={buttonClass}
         >
           ‹
         </button>
         <button
           type="button"
-          onClick={() => onPageChange && onPageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-          className="px-2.5 py-1 border border-med-border rounded bg-white text-med-text-sub hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          aria-label="Página siguiente"
+          onClick={() => onPageChange?.(visiblePageIndex + 1)}
+          disabled={!onPageChange || visiblePageIndex === lastPageIndex}
+          className={buttonClass}
         >
           ›
         </button>
