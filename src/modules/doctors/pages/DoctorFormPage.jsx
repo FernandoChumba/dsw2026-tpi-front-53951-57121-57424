@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import FormMessage from '../../shared/components/FormMessage';
 import { getApiError } from '../../shared/helpers/apiError';
 import DoctorForm from '../components/DoctorForm';
-import { createDoctor, getDoctorSpecialties } from '../services/createDoctor';
+import { getAllSpecialties } from '../../specialties/services/getSpecialties';
+import { createDoctor } from '../services/createDoctor';
 
 export default function DoctorFormPage() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ export default function DoctorFormPage() {
 
     async function load() {
       try {
-        const specialties = await getDoctorSpecialties(controller.signal);
+        const specialties = await getAllSpecialties(controller.signal);
 
         if (!controller.signal.aborted)
           setCatalog({ specialties, error: '', loading: false });
