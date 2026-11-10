@@ -1,19 +1,12 @@
 import { instance } from '../../shared/api/axiosInstance';
 
-export const loginAdmin = async (username, password) => {
-  if (
-    (username === 'admin' ||
-      username === 'admin@medportal.com' ||
-      username === 'admin@test.com') &&
-    password === 'admin123'
-  ) {
-    return { data: 'mock-admin-token-12345', error: null };
-  }
-
-  const response = await instance.post('api/admin/auth/login', {
-    username,
+// POST /api/auth/admin/login → { token, role: 'ADMINISTRADOR' }.
+// Si falla, axios lanza el error y la página lo traduce con getApiError.
+export async function loginAdmin(email, password) {
+  const response = await instance.post('api/auth/admin/login', {
+    email,
     password,
   });
 
-  return { data: response.data.token, error: null };
-};
+  return response.data;
+}
