@@ -37,22 +37,22 @@ Definidos en `@theme`, dentro de `src/index.css`. Se usan como clases: `bg-med-b
 
 ## Componentes
 
-| Componente        | Props principales                                                                                  | Estado                           |
-| ----------------- | -------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `Button`          | `variant` admite `default`, `secondary`, `outline`, `ghost` y `danger`                             | Disponible                       |
-| `Card`            | `className`, `children`                                                                            | Disponible                       |
-| `Input`           | `label`, `error`, `id`, props nativas de input                                                     | Disponible                       |
-| `TablePagination` | Hoy `currentPage`, `totalPages`, `totalItems`, `pageSize`, `onPageChange`                          | F08 lo pasa a `pageIndex` base 0 |
-| `PageHeader`      | `title`, `description`, `actions`                                                                  | Disponible                       |
-| `SearchInput`     | Props de `Input`, con tipo de búsqueda y etiqueta predeterminada «Buscar»                          | Disponible                       |
-| `Select`          | `label`, `error`, `id`, opciones como hijos y props nativas de select                              | Disponible                       |
-| `Textarea`        | `label`, `error`, `id`, `rows` y props nativas de textarea                                         | Disponible                       |
-| `StatusBadge`     | `status` recibe el estado de turno de la API                                                       | Disponible                       |
-| `DataTable`       | `caption`, `columns`, `rows`, `getRowKey`, `emptyMessage`                                          | Disponible                       |
-| `EmptyState`      | `title`, `description`, `action`                                                                   | Disponible                       |
-| `Modal`           | `isOpen`, `title`, `onClose`, `children`, `dismissible`                                            | Disponible                       |
-| `ConfirmDialog`   | `isOpen`, `title`, `description`, `onConfirm`, `onClose`, `confirmLabel`, `cancelLabel`, `variant` | Disponible                       |
-| `FormMessage`     | `type` admite `success` y `error`, con el mensaje como hijo                                        | Disponible                       |
+| Componente        | Props principales                                                                                  | Estado     |
+| ----------------- | -------------------------------------------------------------------------------------------------- | ---------- |
+| `Button`          | `variant` admite `default`, `secondary`, `outline`, `ghost` y `danger`                             | Disponible |
+| `Card`            | `className`, `children`                                                                            | Disponible |
+| `Input`           | `label`, `error`, `id`, props nativas de input                                                     | Disponible |
+| `TablePagination` | `pageIndex` (base 0), `pageSize`, `total`, `onPageChange`                                          | Disponible |
+| `PageHeader`      | `title`, `description`, `actions`                                                                  | Disponible |
+| `SearchInput`     | Props de `Input`, con tipo de búsqueda y etiqueta predeterminada «Buscar»                          | Disponible |
+| `Select`          | `label`, `error`, `id`, opciones como hijos y props nativas de select                              | Disponible |
+| `Textarea`        | `label`, `error`, `id`, `rows` y props nativas de textarea                                         | Disponible |
+| `StatusBadge`     | `status` recibe el estado de turno de la API                                                       | Disponible |
+| `DataTable`       | `caption`, `columns`, `rows`, `getRowKey`, `emptyMessage`                                          | Disponible |
+| `EmptyState`      | `title`, `description`, `action`                                                                   | Disponible |
+| `Modal`           | `isOpen`, `title`, `onClose`, `children`, `dismissible`                                            | Disponible |
+| `ConfirmDialog`   | `isOpen`, `title`, `description`, `onConfirm`, `onClose`, `confirmLabel`, `cancelLabel`, `variant` | Disponible |
+| `FormMessage`     | `type` admite `success` y `error`, con el mensaje como hijo                                        | Disponible |
 
 Quien complete una de esas tareas actualiza esta tabla en el mismo PR.
 
@@ -69,3 +69,5 @@ En `shared/helpers/formatDate.js`, `formatDate` presenta fechas `YYYY-MM-DD` con
 ## Mockups
 
 Las imágenes están en `docs/mockups/`. El índice y las decisiones sobre datos sin respaldo en el backend están en `docs/tasks/README.md`.
+
+En `TablePagination`, el listado controla el índice desde cero y recibe el siguiente índice en `onPageChange`. Con cero registros, ambos botones quedan deshabilitados.
