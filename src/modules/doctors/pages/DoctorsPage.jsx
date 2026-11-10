@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import FormMessage from '../../shared/components/FormMessage';
@@ -7,6 +8,7 @@ import EmptyState from '../../shared/components/EmptyState';
 import PageHeader from '../../shared/components/PageHeader';
 import SearchInput from '../../shared/components/SearchInput';
 import TablePagination from '../../shared/components/TablePagination';
+import DoctorDetailModal from '../components/DoctorDetailModal';
 import useDoctors, { MIN_SEARCH_LENGTH } from '../hooks/useDoctors';
 
 // Enlaces con el mismo aspecto que Button: navegan a otra pantalla, por eso
@@ -28,6 +30,27 @@ const columns = [
 
 function DoctorsPage() {
   const { state } = useLocation();
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const columnsWithActions = [
+    ...columns,
+    {
+      key: 'actions',
+      header: 'Acciones',
+      render: (doctor) => (
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => setSelectedDoctor(doctor)}>
+            Ver detalle
+          </Button>
+          <Link
+            to={`/admin/doctors/${encodeURIComponent(doctor.id)}/edit`}
+            className={linkClass}
+          >
+            Editar
+          </Link>
+        </div>
+      ),
+    },
+  ];
   const {
     doctors,
     total,
@@ -70,7 +93,7 @@ function DoctorsPage() {
     return (
       <DataTable
         caption="Listado de médicos"
-        columns={columns}
+        columns={columnsWithActions}
         rows={doctors}
         emptyMessage={
           search.trim()
@@ -124,6 +147,10 @@ function DoctorsPage() {
           onPageChange={changePage}
         />
       </Card>
+      <DoctorDetailModal
+        doctor={selectedDoctor}
+        onClose={() => setSelectedDoctor(null)}
+      />
     </div>
   );
 }
