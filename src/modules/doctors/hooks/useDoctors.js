@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getApiError } from '../../shared/helpers/apiError';
+import { deleteDoctor } from '../services/deleteDoctor';
 import { getDoctors } from '../services/getDoctors';
 
 export const PAGE_SIZE = 10;
@@ -80,6 +81,20 @@ export default function useDoctors() {
 
   const reload = () => setReloadKey((key) => key + 1);
 
+  // Elimina un médico (el backend hace una baja lógica) y actualiza el
+  // listado. Si era el único de la página y no es la primera, se vuelve a la
+  // página anterior para no mostrar una página vacía.
+  // Si falla, el error sigue hacia ConfirmDialog, que lo muestra.
+  const removeDoctor = async (id) => {
+    await deleteDoctor(id);
+
+    if (result.data.length === 1 && pageIndex > 0) {
+      setPageIndex(pageIndex - 1);
+    } else {
+      reload();
+    }
+  };
+
   return {
     doctors: result.data,
     total: result.total,
@@ -92,5 +107,6 @@ export default function useDoctors() {
     changeSearch,
     changePage: setPageIndex,
     reload,
+    removeDoctor,
   };
 }

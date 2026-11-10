@@ -1,67 +1,18 @@
-import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import FormMessage from '../../shared/components/FormMessage';
-import { getApiError } from '../../shared/helpers/apiError';
 import DoctorForm from '../components/DoctorForm';
-import { getAllSpecialties } from '../../specialties/services/getSpecialties';
-import { createDoctor } from '../services/createDoctor';
-import { getDoctor } from '../services/getDoctor';
-import { updateDoctor } from '../services/updateDoctor';
+import useDoctorForm from '../hooks/useDoctorForm';
 
 // Contenido de la página. Si la URL trae un id, se edita ese médico; si no,
-// se registra uno nuevo.
+// se registra uno nuevo. La carga y el guardado están en useDoctorForm: acá
+// solo se decide qué mostrar y a dónde navegar.
 function DoctorFormContent({ id }) {
   const navigate = useNavigate();
-  const [catalog, setCatalog] = useState({
-    specialties: [],
-    doctor: null,
-    error: '',
-    loading: true,
-  });
+  const { specialties, doctor, error, loading, save } = useDoctorForm(id);
 
-  useEffect(() => {
-    // Si el usuario sale de la página antes de que lleguen las respuestas,
-    // se descartan (mismo criterio que useDoctors).
-    let ignore = false;
-
-    async function load() {
-      try {
-        // Las especialidades se necesitan siempre, para el selector.
-        const specialties = await getAllSpecialties();
-        // El médico solo se pide al editar.
-        let doctor = null;
-
-        if (id) {
-          doctor = await getDoctor(id);
-        }
-
-        if (!ignore) {
-          setCatalog({ specialties, doctor, error: '', loading: false });
-        }
-      } catch (error) {
-        // Por ejemplo, un id que no existe responde 404 y se muestra
-        // "El elemento buscado no existe." con el enlace al listado.
-        if (!ignore) {
-          setCatalog({
-            specialties: [],
-            doctor: null,
-            error: getApiError(error).message,
-            loading: false,
-          });
-        }
-      }
-    }
-
-    load();
-
-    return () => {
-      ignore = true;
-    };
-  }, [id]);
-
-  async function save(values) {
-    if (id) await updateDoctor(id, values);
-    else await createDoctor(values);
+  // Después de guardar se vuelve al listado con un mensaje de éxito.
+  async function handleSubmit(values) {
+    await save(values);
 
     navigate('/admin/doctors', {
       state: {
@@ -72,21 +23,21 @@ function DoctorFormContent({ id }) {
     });
   }
 
-  if (catalog.loading) return <p role="status">Cargando datos…</p>;
+  if (loading) return <p role="status">Cargando datos…</p>;
 
-  if (catalog.error)
+  if (error)
     return (
       <div className="flex flex-col gap-4">
-        <FormMessage type="error">{catalog.error}</FormMessage>
+        <FormMessage type="error">{error}</FormMessage>
         <Link to="/admin/doctors">Volver al listado</Link>
       </div>
     );
 
   return (
     <DoctorForm
-      doctor={catalog.doctor}
-      specialties={catalog.specialties}
-      onSubmit={save}
+      doctor={doctor}
+      specialties={specialties}
+      onSubmit={handleSubmit}
       onCancel={() => navigate('/admin/doctors')}
     />
   );
