@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../../shared/components/Card';
 import Button from '../../shared/components/Button';
 import DoctorDetailModal from '../components/DoctorDetailModal';
 
 function DoctorsPage() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
 
@@ -90,7 +92,7 @@ function DoctorsPage() {
           </div>
 
           <Button
-            onClick={() => alert('Abrir modal de disponibilidad horaria')}
+            onClick={() => navigate('/admin/doctors/availability')}
             className="flex items-center gap-2 bg-med-primary-900 hover:bg-med-primary-800 text-white"
           >
             <svg
@@ -110,7 +112,7 @@ function DoctorsPage() {
           </Button>
 
           <Button
-            onClick={() => alert('Abrir modal de nuevo doctor')}
+            onClick={() => navigate('/admin/doctors/new')}
             className="flex items-center gap-1.5 bg-med-primary-700 hover:bg-med-primary-800 text-white"
           >
             <span>+</span>
@@ -224,7 +226,11 @@ function DoctorsPage() {
                       <button
                         title="Editar profesional"
                         className="p-1.5 rounded-lg hover:bg-med-primary-50 text-med-primary-600 hover:text-med-primary-900 transition"
-                        onClick={() => alert(`Editar profesional ${doc.name}`)}
+                        onClick={() =>
+                          navigate(
+                            `/admin/doctors/${encodeURIComponent(doc.id)}/edit`
+                          )
+                        }
                       >
                         <svg
                           className="w-4 h-4"
