@@ -21,9 +21,14 @@ import OverviewPage from './modules/dashboard/pages/OverviewPage';
 
 // Domain Modules (Screaming Architecture)
 import DoctorsPage from './modules/doctors/pages/DoctorsPage';
+import DoctorFormPage from './modules/doctors/pages/DoctorFormPage';
+import DoctorAvailabilityPage from './modules/doctors/pages/DoctorAvailabilityPage';
 import SpecialtiesPage from './modules/specialties/pages/SpecialtiesPage';
+import SpecialtyFormPage from './modules/specialties/pages/SpecialtyFormPage';
 import AppointmentsSearchPage from './modules/appointments/pages/AppointmentsSearchPage';
 
+// Mapa completo de rutas de la aplicación. Las tareas siguientes completan
+// las páginas, no agregan rutas nuevas.
 const routes = [
   // Rutas públicas
   {
@@ -35,7 +40,7 @@ const routes = [
     element: <AdminLoginPage />,
   },
 
-  // Rutas privadas de pacientes (URL base y turnos)
+  // Rutas privadas de pacientes (reserva y "Mis turnos")
   {
     path: '/',
     element: (
@@ -55,7 +60,7 @@ const routes = [
     ],
   },
 
-  // Rutas privadas de gestión clínica y administración
+  // Rutas privadas de administración
   {
     path: '/admin',
     element: (
@@ -72,25 +77,40 @@ const routes = [
         path: 'home',
         element: <OverviewPage />,
       },
-      {
-        path: 'patients',
-        element: <AppointmentsSearchPage />,
-      },
-      {
-        path: 'patient-search',
-        element: <AppointmentsSearchPage />,
-      },
-      {
-        path: 'appointments',
-        element: <Navigate to="/admin/patients" replace />,
-      },
+      // Especialidades
       {
         path: 'specialties',
         element: <SpecialtiesPage />,
       },
       {
+        path: 'specialties/new',
+        element: <SpecialtyFormPage />,
+      },
+      {
+        path: 'specialties/:id/edit',
+        element: <SpecialtyFormPage />,
+      },
+      // Médicos
+      {
         path: 'doctors',
         element: <DoctorsPage />,
+      },
+      {
+        path: 'doctors/new',
+        element: <DoctorFormPage />,
+      },
+      {
+        path: 'doctors/:id/edit',
+        element: <DoctorFormPage />,
+      },
+      {
+        path: 'doctors/availability',
+        element: <DoctorAvailabilityPage />,
+      },
+      // Búsqueda avanzada de turnos
+      {
+        path: 'appointments',
+        element: <AppointmentsSearchPage />,
       },
     ],
   },
@@ -102,9 +122,12 @@ const routes = [
   },
 ];
 
-function App() {
-  const router = createBrowserRouter(routes);
+// El router se crea una sola vez, fuera del componente. Si se creara dentro
+// de App, se volvería a crear en cada render y se perdería el estado de la
+// navegación.
+const router = createBrowserRouter(routes);
 
+function App() {
   return (
     <AuthProvider>
       <RouterProvider router={router} />
