@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { clearSession, getToken } from '../helpers/session';
 
 // Todas las peticiones usan rutas relativas ('/api/...'). En desarrollo, el
 // proxy de Vite (vite.config.js) las reenvía al backend definido en
@@ -14,7 +15,7 @@ const instance = axios.create({
 
 // Antes de cada petición: si hay sesión, se agrega el token JWT.
 instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = getToken();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -40,9 +41,11 @@ instance.interceptors.response.use(
 
     // Un 401 en login significa credenciales inválidas: lo resuelve el
     // formulario. En cualquier otra ruta significa que la sesión ya no es
-    // válida: se borra el token y se vuelve al login del área.
+    // válida (por ejemplo, el token venció): se borra la sesión y se vuelve
+    // al login del área. El front no decodifica el JWT para saber si venció:
+    // quien valida el token es siempre el backend.
     if (status === 401 && !isLoginRequest(error.config)) {
-      localStorage.removeItem('token');
+      clearSession();
 
       const loginPath = getLoginPath();
 
