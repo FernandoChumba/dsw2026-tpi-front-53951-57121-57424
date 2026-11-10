@@ -33,7 +33,9 @@ const columns = [
 function DoctorsPage() {
   const { state } = useLocation();
   const [doctorToRemove, setDoctorToRemove] = useState(null);
-  const [removed, setRemoved] = useState(false);
+  // Aviso de éxito: llega del formulario al guardar, o se muestra al eliminar.
+  // Se borra al buscar o cambiar de página, para que no quede siempre visible.
+  const [notice, setNotice] = useState(state?.doctorMessage ?? '');
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const columnsWithActions = [
     ...columns,
@@ -72,10 +74,9 @@ function DoctorsPage() {
     reload,
   } = useDoctors();
 
-  // Contenido de la tabla según el estado de la consulta.
   async function confirmRemoval() {
     await deleteDoctor(doctorToRemove.id);
-    setRemoved(true);
+    setNotice('Médico eliminado correctamente.');
 
     if (doctors.length === 1 && pageIndex > 0) {
       changePage(pageIndex - 1);
@@ -84,6 +85,12 @@ function DoctorsPage() {
     }
   }
 
+  function goToPage(index) {
+    setNotice('');
+    changePage(index);
+  }
+
+  // Contenido de la tabla según el estado de la consulta.
   function renderContent() {
     if (isLoading) {
       return (
@@ -124,14 +131,7 @@ function DoctorsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      {state?.doctorMessage && (
-        <FormMessage type="success">{state.doctorMessage}</FormMessage>
-      )}
-      {removed && (
-        <FormMessage type="success">
-          Médico eliminado correctamente.
-        </FormMessage>
-      )}
+      {notice && <FormMessage type="success">{notice}</FormMessage>}
       <PageHeader
         title="Directorio de médicos"
         description="Gestioná el personal médico y su disponibilidad."
@@ -152,7 +152,10 @@ function DoctorsPage() {
           label="Buscar médico"
           placeholder="Buscar médico por nombre…"
           value={search}
-          onChange={(event) => changeSearch(event.target.value)}
+          onChange={(event) => {
+            setNotice('');
+            changeSearch(event.target.value);
+          }}
           error={
             isSearchTooShort
               ? `Ingresá al menos ${MIN_SEARCH_LENGTH} caracteres para buscar.`
@@ -167,7 +170,7 @@ function DoctorsPage() {
           pageIndex={pageIndex}
           pageSize={pageSize}
           total={total}
-          onPageChange={changePage}
+          onPageChange={goToPage}
         />
       </Card>
       <ConfirmDialog
