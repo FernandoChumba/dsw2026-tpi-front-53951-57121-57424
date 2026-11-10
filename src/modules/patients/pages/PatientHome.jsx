@@ -13,6 +13,7 @@ function PatientHome() {
     doctorId,
     selectedSpecialty,
     selectedDoctor,
+    doctorSlots,
     isLoading,
     error,
     hasSlots,
@@ -49,6 +50,7 @@ function PatientHome() {
             key={selectedDoctor.id}
             doctorName={selectedDoctor.name}
             specialtyName={selectedSpecialty.name}
+            slots={doctorSlots}
           />
         </>
       )}
