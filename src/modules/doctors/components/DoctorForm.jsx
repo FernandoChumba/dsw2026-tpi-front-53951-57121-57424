@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
+import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import Select from '../../shared/components/Select';
 
@@ -104,9 +105,7 @@ export default function DoctorForm({ specialties = [], onSubmit, onCancel }) {
           </p>
         )}
         {errors.root?.message && (
-          <p role="alert" className="text-sm text-med-danger-text">
-            {errors.root.message}
-          </p>
+          <FormMessage type="error">{errors.root.message}</FormMessage>
         )}
         <div className="flex flex-wrap justify-end gap-2 border-t border-med-border pt-4">
           <Button variant="outline" disabled={isSubmitting} onClick={onCancel}>
