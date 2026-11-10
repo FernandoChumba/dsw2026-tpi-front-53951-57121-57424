@@ -49,4 +49,4 @@ Dejar el proyecto sin errores de herramientas ni de consola.
 ## Aclaraciones del profe (consultas de noviembre)
 
 - **Evaluación:** el profe corre `lint` y `build` sobre el proyecto: no puede haber errores.
-- **Revisión de patrones:** probablemente use un prompt para revisar si se respetan los patrones (página → hook → service, Atomic Design, sin código duplicado).
+- **Revisión de patrones:** también va a revisar si se respetan los patrones (página → hook → service, Atomic Design, sin código duplicado).
