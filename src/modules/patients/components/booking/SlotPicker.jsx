@@ -39,7 +39,7 @@ function sortSlots(slots) {
 // Calendario semanal con los bloques libres del médico elegido.
 // - slots: bloques del médico, tal como los devuelve el backend.
 // El backend ya devuelve solo bloques libres y futuros: acá no se filtra.
-export default function SlotPicker({ doctorName, specialtyName, slots }) {
+export default function SlotPicker({ doctorName, slots }) {
   const sortedSlots = sortSlots(slots);
   const slotsByDate = groupByDate(sortedSlots);
 
@@ -218,11 +218,7 @@ export default function SlotPicker({ doctorName, specialtyName, slots }) {
         </div>
       </Card>
 
-      <BookingSummary
-        doctorName={doctorName}
-        specialtyName={specialtyName}
-        slot={selectedSlot}
-      />
+      <BookingSummary doctorName={doctorName} slot={selectedSlot} />
     </>
   );
 }

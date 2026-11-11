@@ -49,7 +49,6 @@ function PatientHome() {
           <SlotPicker
             key={selectedDoctor.id}
             doctorName={selectedDoctor.name}
-            specialtyName={selectedSpecialty.name}
             slots={doctorSlots}
           />
         </>
