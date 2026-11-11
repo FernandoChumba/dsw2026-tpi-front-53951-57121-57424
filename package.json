@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "seed:dev": "node --env-file=.env.development scripts/seed-dev.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
