@@ -1,90 +1,75 @@
-import Card from '../../shared/components/Card';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
+import Card from '../../shared/components/Card';
+import EmptyState from '../../shared/components/EmptyState';
+import FormMessage from '../../shared/components/FormMessage';
+import StatusBadge from '../../shared/components/StatusBadge';
+import { formatDate, formatTime } from '../../shared/helpers/formatDate';
+import usePatientAppointments from '../hooks/usePatientAppointments';
 
 function AppointmentsPage() {
-  const sampleAppointments = [
-    {
-      id: 1,
-      doctor: 'Dra. María González',
-      specialty: 'Cardiología',
-      date: '2026-10-28',
-      time: '10:30 hs',
-      status: 'Confirmado',
-    },
-    {
-      id: 2,
-      doctor: 'Dr. Lucas Fernández',
-      specialty: 'Traumatología',
-      date: '2026-11-05',
-      time: '15:00 hs',
-      status: 'Pendiente',
-    },
-  ];
+  const navigate = useNavigate();
+  const { appointments, isLoading, error, reload } = usePatientAppointments();
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="flex min-w-0 flex-col gap-6">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-med-text-main">
-            Mis Turnos Médicos
+          <h1 className="text-2xl font-bold tracking-tight text-med-text-main sm:text-3xl">
+            Mis turnos médicos
           </h1>
-          <p className="text-sm text-med-text-sub mt-1">
-            Consulta y gestiona las citas médicas programadas.
+          <p className="mt-1 text-sm text-med-text-sub">
+            Consultá tus turnos activos.
           </p>
         </div>
-        <Button onClick={() => alert('Función de nuevo turno próximamente')}>
-          + Solicitar Nuevo Turno
+        <Button className="min-h-11" onClick={() => navigate('/')}>
+          Solicitar nuevo turno
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {sampleAppointments.map((appt) => (
-          <Card
-            key={appt.id}
-            className="flex flex-col justify-between gap-4 p-6"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-med-primary-100 text-med-primary-700">
-                  {appt.specialty}
+      {isLoading ? (
+        <p role="status">Cargando turnos…</p>
+      ) : error ? (
+        <div className="flex flex-col items-start gap-3">
+          <FormMessage type="error">{error}</FormMessage>
+          <Button variant="outline" onClick={reload}>
+            Reintentar
+          </Button>
+        </div>
+      ) : appointments.length === 0 ? (
+        <EmptyState
+          title="No tenés turnos activos"
+          description="Cuando reserves un turno, aparecerá acá."
+        />
+      ) : (
+        <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2">
+          {appointments.map((appointment) => (
+            <Card key={appointment.id} className="min-w-0 space-y-3 p-5">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <span className="break-words text-sm font-semibold text-med-primary-700">
+                  {appointment.specialty}
                 </span>
-                <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                    appt.status === 'Confirmado'
-                      ? 'bg-med-active-bg text-med-active-text'
-                      : 'bg-med-leave-bg text-med-leave-text'
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                  {appt.status}
-                </span>
+                <StatusBadge status={appointment.status} />
               </div>
-              <h3 className="text-lg font-bold text-med-primary-900">
-                {appt.doctor}
-              </h3>
-              <p className="text-sm text-med-text-sub mt-2">
+              <h2 className="break-words text-lg font-bold text-med-primary-900">
+                {appointment.doctor}
+              </h2>
+              <p className="text-sm text-med-text-sub">
                 Fecha:{' '}
-                <strong className="text-med-text-main font-semibold">
-                  {appt.date}
-                </strong>{' '}
-                a las{' '}
-                <strong className="text-med-text-main font-semibold">
-                  {appt.time}
+                <strong className="text-med-text-main">
+                  {formatDate(appointment.date)}
                 </strong>
               </p>
-            </div>
-            <div className="flex gap-2 pt-3 border-t border-med-border">
-              <Button
-                variant="outline"
-                className="w-full text-xs"
-                onClick={() => alert(`Cancelando turno ${appt.id}`)}
-              >
-                Cancelar Turno
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+              <p className="text-sm text-med-text-sub">
+                Hora:{' '}
+                <strong className="text-med-text-main">
+                  {formatTime(appointment.startTime)}
+                </strong>
+              </p>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
