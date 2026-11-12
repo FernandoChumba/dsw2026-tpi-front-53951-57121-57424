@@ -50,6 +50,8 @@ function PatientHome() {
             key={selectedDoctor.id}
             doctorName={selectedDoctor.name}
             slots={doctorSlots}
+            onReload={reload}
+            isLoading={isLoading || Boolean(error)}
           />
         </>
       )}

@@ -1,5 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import useAuth from '../../../auth/hook/useAuth';
+import Button from '../../../shared/components/Button';
 import Card from '../../../shared/components/Card';
+import FormMessage from '../../../shared/components/FormMessage';
+import Modal from '../../../shared/components/Modal';
+import useCreateAppointment from '../../hooks/useCreateAppointment';
 import { formatTime } from '../../../shared/helpers/formatDate';
 import BookingSummary from './BookingSummary';
 import {
@@ -39,7 +45,10 @@ function sortSlots(slots) {
 // Calendario semanal con los bloques libres del médico elegido.
 // - slots: bloques del médico, tal como los devuelve el backend.
 // El backend ya devuelve solo bloques libres y futuros: acá no se filtra.
-export default function SlotPicker({ doctorName, slots }) {
+export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
+  const { dni } = useAuth();
+  const { create, isSubmitting, success, error, conflict, clearConflict } =
+    useCreateAppointment();
   const sortedSlots = sortSlots(slots);
   const slotsByDate = groupByDate(sortedSlots);
 
@@ -84,6 +93,7 @@ export default function SlotPicker({ doctorName, slots }) {
         key={slot.availabilitySlotId}
         type="button"
         aria-pressed={isSelected}
+        disabled={isSubmitting || success || conflict || isLoading}
         onClick={() => setSelectedSlot(slot)}
         className={`w-full rounded-lg border px-2 py-2 text-center text-xs font-semibold transition-all ${extraClass} ${
           isSelected
@@ -94,6 +104,22 @@ export default function SlotPicker({ doctorName, slots }) {
         {formatTime(slot.startTime)}
       </button>
     );
+  }
+
+  async function confirmBooking({ slot, reason }) {
+    const result = await create({
+      doctorId: slot?.doctor?.doctorId,
+      availabilitySlotId: slot?.availabilitySlotId,
+      dni,
+      reason,
+    });
+
+    if (result === 'conflict') setSelectedSlot(null);
+  }
+
+  function closeConflict() {
+    clearConflict();
+    onReload();
   }
 
   const mobileSlots = slotsByDate[mobileDate] ?? [];
@@ -218,7 +244,50 @@ export default function SlotPicker({ doctorName, slots }) {
         </div>
       </Card>
 
-      <BookingSummary doctorName={doctorName} slot={selectedSlot} />
+      <BookingSummary
+        doctorName={doctorName}
+        slot={selectedSlot}
+        onConfirm={confirmBooking}
+        isSubmitting={isSubmitting}
+        disabled={!dni || success || conflict || isLoading}
+        error={
+          !dni
+            ? 'No se encontró el DNI de tu sesión. Volvé a iniciar sesión.'
+            : error
+        }
+      />
+
+      <Modal
+        isOpen={conflict}
+        title="Horario no disponible"
+        onClose={closeConflict}
+      >
+        <div className="flex flex-col items-start gap-4">
+          <FormMessage type="error">
+            Ese horario acaba de dejar de estar disponible. Elegí otro.
+          </FormMessage>
+          <Button onClick={closeConflict}>Actualizar horarios</Button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={success}
+        title="Turno confirmado"
+        onClose={() => {}}
+        dismissible={false}
+      >
+        <div className="flex flex-col items-start gap-4">
+          <FormMessage type="success">
+            Tu turno se reservó con éxito.
+          </FormMessage>
+          <Link
+            to="/appointments"
+            className="font-semibold text-med-primary-900 underline"
+          >
+            Ir a Mis turnos
+          </Link>
+        </div>
+      </Modal>
     </>
   );
 }

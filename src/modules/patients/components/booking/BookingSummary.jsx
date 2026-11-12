@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import Button from '../../../shared/components/Button';
+import FormMessage from '../../../shared/components/FormMessage';
 import Textarea from '../../../shared/components/Textarea';
 import { formatTime } from '../../../shared/helpers/formatDate';
 import { formatLongDate } from './dates';
@@ -28,13 +29,15 @@ function validateReason(value) {
   return true;
 }
 
-// Resumen del horario elegido, motivo de la consulta y botón para confirmar.
-// - slot: bloque elegido en el calendario (null si todavía no se eligió).
-// - onConfirm: recibe { slot, reason } cuando el formulario es válido.
-//   El envío al backend llega con F27: mientras no se pase onConfirm, el
-//   botón queda deshabilitado para que el paciente no pulse algo que no
-//   hace nada.
-export default function BookingSummary({ doctorName, slot, onConfirm }) {
+// Resumen del horario elegido y motivo de la consulta.
+export default function BookingSummary({
+  doctorName,
+  slot,
+  onConfirm,
+  isSubmitting,
+  disabled,
+  error,
+}) {
   const {
     register,
     handleSubmit,
@@ -73,20 +76,22 @@ export default function BookingSummary({ doctorName, slot, onConfirm }) {
         )}
       </div>
 
+      {error && <FormMessage type="error">{error}</FormMessage>}
+
       <Textarea
         label="Motivo de la consulta"
         placeholder="Contá brevemente por qué pedís el turno."
         error={errors.reason?.message}
+        disabled={isSubmitting}
         {...register('reason', { validate: validateReason })}
       />
 
-      {/* Sin horario elegido, o sin onConfirm (llega con F27), no se puede confirmar. */}
       <Button
         type="submit"
-        disabled={!slot || !onConfirm}
+        disabled={!slot || !onConfirm || isSubmitting || disabled}
         className="min-h-11 w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:self-end"
       >
-        Confirmar Turno
+        {isSubmitting ? 'Confirmando…' : 'Confirmar Turno'}
       </Button>
     </form>
   );
