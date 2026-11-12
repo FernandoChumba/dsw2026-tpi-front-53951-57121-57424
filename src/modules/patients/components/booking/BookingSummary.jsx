@@ -32,7 +32,8 @@ function validateReason(value) {
 // - slot: bloque elegido en el calendario (null si todavía no se eligió).
 // - onConfirm: recibe { slot, reason } cuando el formulario es válido.
 //   El envío al backend llega con F27: mientras no se pase onConfirm, el
-//   botón solo valida y no muestra ningún aviso de reserva.
+//   botón queda deshabilitado para que el paciente no pulse algo que no
+//   hace nada.
 export default function BookingSummary({ doctorName, slot, onConfirm }) {
   const {
     register,
@@ -79,10 +80,10 @@ export default function BookingSummary({ doctorName, slot, onConfirm }) {
         {...register('reason', { validate: validateReason })}
       />
 
-      {/* Sin horario elegido no se puede confirmar. */}
+      {/* Sin horario elegido, o sin onConfirm (llega con F27), no se puede confirmar. */}
       <Button
         type="submit"
-        disabled={!slot}
+        disabled={!slot || !onConfirm}
         className="min-h-11 w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:self-end"
       >
         Confirmar Turno
