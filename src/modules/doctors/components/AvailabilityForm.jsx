@@ -1,8 +1,11 @@
 import { useId } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import { useSearchParams } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
+import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
+import useDoctorAvailability from '../hooks/useDoctorAvailability';
 
 const days = [
   ['LUNES', 'Lunes'],
@@ -33,10 +36,53 @@ function getInitialDays(availability) {
   );
 }
 
-function AvailabilityDay({ day, label, register, control }) {
-  const field = `days.${day}`;
-  const enabled = useWatch({ control, name: `${field}.enabled` });
+function isHalfHour(value) {
+  return /^(?:[01]\d|2[0-3]):(?:00|30)$/.test(value ?? '');
+}
+
+function AvailabilityDay({
+  day,
+  label,
+  register,
+  control,
+  getValues,
+  clearErrors,
+  trigger,
+  errors,
+  disabled,
+}) {
+  const field = 'days.' + day;
+  const enabledName = field + '.enabled';
+  const startName = field + '.startTime';
+  const endName = field + '.endTime';
+  const enabled = useWatch({ control, name: enabledName });
   const labelId = useId();
+  const startField = register(startName, {
+    validate: (value) => {
+      if (!getValues(enabledName)) return true;
+
+      if (!value) return 'Ingresá la hora de entrada.';
+
+      return isHalfHour(value) || 'Usá intervalos de 30 minutos.';
+    },
+  });
+  const endField = register(endName, {
+    validate: (value) => {
+      if (!getValues(enabledName)) return true;
+
+      if (!value) return 'Ingresá la hora de salida.';
+
+      if (!isHalfHour(value)) return 'Usá intervalos de 30 minutos.';
+
+      const start = getValues(startName);
+
+      return (
+        !isHalfHour(start) ||
+        start < value ||
+        'La salida debe ser posterior a la entrada.'
+      );
+    },
+  });
 
   return (
     <div
@@ -51,9 +97,16 @@ function AvailabilityDay({ day, label, register, control }) {
         <input
           type="checkbox"
           role="switch"
-          aria-label={`Habilitar ${label.toLowerCase()}`}
+          aria-label={'Habilitar ' + label.toLowerCase()}
+          disabled={disabled}
           className="peer sr-only"
-          {...register(`${field}.enabled`)}
+          {...register(enabledName, {
+            onChange: (event) => {
+              clearErrors('root');
+
+              if (!event.target.checked) clearErrors([startName, endName]);
+            },
+          })}
         />
         <span
           aria-hidden="true"
@@ -67,17 +120,24 @@ function AvailabilityDay({ day, label, register, control }) {
         type="time"
         step={1800}
         label="Entrada"
-        aria-label={`Entrada del ${label.toLowerCase()}`}
-        disabled={!enabled}
-        {...register(`${field}.startTime`)}
+        aria-label={'Entrada del ' + label.toLowerCase()}
+        disabled={!enabled || disabled}
+        error={errors?.startTime?.message}
+        {...startField}
+        onChange={async (event) => {
+          await startField.onChange(event);
+
+          if (getValues(endName)) await trigger(endName);
+        }}
       />
       <Input
         type="time"
         step={1800}
         label="Salida"
-        aria-label={`Salida del ${label.toLowerCase()}`}
-        disabled={!enabled}
-        {...register(`${field}.endTime`)}
+        aria-label={'Salida del ' + label.toLowerCase()}
+        disabled={!enabled || disabled}
+        error={errors?.endTime?.message}
+        {...endField}
       />
     </div>
   );
@@ -87,9 +147,47 @@ export default function AvailabilityForm({
   initialAvailability = [],
   onCancel,
 }) {
-  const { register, control } = useForm({
+  const [params] = useSearchParams();
+  const doctorId = params.get('doctorId') ?? '';
+  // F21 ya cargó las reglas; este uso del hook solo guarda y evita repetir consultas.
+  const { saveAvailability, saving, saveError, saved } = useDoctorAvailability(
+    doctorId,
+    { saveOnly: true, initialAvailability }
+  );
+  const {
+    register,
+    control,
+    getValues,
+    clearErrors,
+    setError,
+    handleSubmit,
+    trigger,
+    formState: { errors, isSubmitting },
+  } = useForm({
     defaultValues: { days: getInitialDays(initialAvailability) },
+    mode: 'onChange',
   });
+
+  async function submit(values) {
+    clearErrors('root');
+    const selectedDays = days
+      .filter(([day]) => values.days[day]?.enabled)
+      .map(([day]) => ({
+        day,
+        startTime: values.days[day].startTime,
+        endTime: values.days[day].endTime,
+      }));
+
+    if (selectedDays.length === 0) {
+      setError('root', { message: 'Habilitá al menos un día de atención.' });
+
+      return;
+    }
+
+    await saveAvailability(selectedDays);
+  }
+
+  const busy = isSubmitting || saving;
 
   return (
     <Card className="overflow-hidden">
@@ -99,22 +197,49 @@ export default function AvailabilityForm({
         </h2>
         <p className="text-sm text-med-text-sub">Intervalos de 30 minutos</p>
       </div>
-      <div className="divide-y divide-med-border">
-        {days.map(([day, label]) => (
-          <AvailabilityDay
-            key={day}
-            day={day}
-            label={label}
-            register={register}
-            control={control}
-          />
-        ))}
-      </div>
-      <div className="flex justify-end border-t border-med-border p-4">
-        <Button variant="outline" onClick={onCancel}>
-          Cancelar
-        </Button>
-      </div>
+      {saved && (
+        <div className="px-4 pt-4">
+          <FormMessage type="success">
+            Disponibilidad horaria configurada con éxito
+          </FormMessage>
+        </div>
+      )}
+      {saveError && (
+        <div className="px-4 pt-4">
+          <FormMessage type="error">{saveError}</FormMessage>
+        </div>
+      )}
+      <form noValidate onSubmit={handleSubmit(submit)}>
+        <div className="divide-y divide-med-border">
+          {days.map(([day, label]) => (
+            <AvailabilityDay
+              key={day}
+              day={day}
+              label={label}
+              register={register}
+              control={control}
+              getValues={getValues}
+              clearErrors={clearErrors}
+              trigger={trigger}
+              errors={errors.days?.[day]}
+              disabled={busy}
+            />
+          ))}
+        </div>
+        {errors.root?.message && (
+          <div className="px-4 pt-4">
+            <FormMessage type="error">{errors.root.message}</FormMessage>
+          </div>
+        )}
+        <div className="flex justify-end gap-2 border-t border-med-border p-4">
+          <Button variant="outline" disabled={busy} onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button type="submit" disabled={busy}>
+            {busy ? 'Guardando…' : 'Guardar disponibilidad'}
+          </Button>
+        </div>
+      </form>
     </Card>
   );
 }
