@@ -1,46 +1,57 @@
 import { useNavigate } from 'react-router-dom';
-import Card from '../../shared/components/Card';
 import Button from '../../shared/components/Button';
+import Card from '../../shared/components/Card';
+import DataTable from '../../shared/components/DataTable';
+import FormMessage from '../../shared/components/FormMessage';
+import useDashboardSummary from '../hooks/useDashboardSummary';
 
 function OverviewPage() {
   const navigate = useNavigate();
+  const { summary, isLoading, error, reload } = useDashboardSummary();
 
-  const previewDoctors = [
+  const doctorColumns = [
     {
-      id: 1,
-      name: 'Dr. James Wilson',
-      specialty: 'Cardiología',
-      status: 'Activo',
-      statusType: 'active',
-      avatar: '👨‍⚕️',
+      key: 'name',
+      header: 'Nombre del Doctor',
     },
     {
-      id: 2,
-      name: 'Dr. Elena Rodriguez',
-      specialty: 'Neurología',
-      status: 'Activo',
-      statusType: 'active',
-      avatar: '👩‍⚕️',
+      key: 'specialty',
+      header: 'Especialidad',
+      render: (doctor) => doctor.specialty?.name || '—',
     },
     {
-      id: 3,
-      name: 'Dr. Robert Chen',
-      specialty: 'Pediatría',
-      status: 'De Licencia',
-      statusType: 'leave',
-      avatar: '👨‍⚕️',
+      key: 'licenseNumber',
+      header: 'Matrícula',
+    },
+    {
+      key: 'actions',
+      header: 'Acciones',
+      render: () => (
+        <button
+          type="button"
+          onClick={() => navigate('/admin/doctors')}
+          className="text-xs font-semibold text-med-primary-700 hover:text-med-primary-900"
+        >
+          Ver Doctores
+        </button>
+      ),
     },
   ];
 
+  const metricValue = (value) => {
+    if (isLoading) return '…';
+
+    return value ?? '—';
+  };
+
   return (
     <div className="flex flex-col gap-8">
-      {/* Header con Título y Acciones Principales */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-med-text-main">
+          <h1 className="text-2xl font-bold tracking-tight text-med-text-main sm:text-3xl">
             Vista General de Gestión
           </h1>
-          <p className="text-sm text-med-text-sub mt-1">
+          <p className="mt-1 text-sm text-med-text-sub">
             Configure el personal médico y las especialidades del departamento.
           </p>
         </div>
@@ -65,17 +76,25 @@ function OverviewPage() {
         </div>
       </div>
 
-      {/* Tarjetas de Métricas de la Imagen 2 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Doctores Activos */}
+      {error && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <FormMessage type="error">{error}</FormMessage>
+          <Button variant="secondary" onClick={reload}>
+            Reintentar
+          </Button>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <Card className="flex flex-col justify-between p-6">
           <div className="flex items-start justify-between">
-            <div className="w-11 h-11 rounded-xl bg-med-primary-50 text-med-primary-900 flex items-center justify-center">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-med-primary-50 text-med-primary-900">
               <svg
-                className="w-6 h-6"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -85,30 +104,26 @@ function OverviewPage() {
                 />
               </svg>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-med-active-bg text-med-active-text">
-              +4 este mes
-            </span>
           </div>
-
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
               Doctores Activos
             </span>
-            <p className="text-3xl sm:text-4xl font-extrabold text-med-primary-900 mt-1">
-              124
+            <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
+              {metricValue(summary?.doctorsCount)}
             </p>
           </div>
         </Card>
 
-        {/* Especialidades Activas */}
         <Card className="flex flex-col justify-between p-6">
           <div className="flex items-start justify-between">
-            <div className="w-11 h-11 rounded-xl bg-med-primary-50 text-med-primary-900 flex items-center justify-center">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-med-primary-50 text-med-primary-900">
               <svg
-                className="w-6 h-6"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -118,30 +133,26 @@ function OverviewPage() {
                 />
               </svg>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">
-              Estable
-            </span>
           </div>
-
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
               Especialidades Activas
             </span>
-            <p className="text-3xl sm:text-4xl font-extrabold text-med-primary-900 mt-1">
-              32
+            <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
+              {metricValue(summary?.specialtiesCount)}
             </p>
           </div>
         </Card>
 
-        {/* Turnos Confirmados para Hoy */}
         <Card className="flex flex-col justify-between p-6">
           <div className="flex items-start justify-between">
-            <div className="w-11 h-11 rounded-xl bg-med-primary-50 text-med-primary-900 flex items-center justify-center">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-med-primary-50 text-med-primary-900">
               <svg
-                className="w-6 h-6"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -151,36 +162,34 @@ function OverviewPage() {
                 />
               </svg>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-med-primary-100 text-med-primary-700">
+            <span className="rounded-full bg-med-primary-100 px-2.5 py-1 text-xs font-semibold text-med-primary-700">
               Hoy
             </span>
           </div>
-
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
               Turnos Confirmados Para Hoy
             </span>
-            <p className="text-3xl sm:text-4xl font-extrabold text-med-primary-900 mt-1">
-              48
+            <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
+              {metricValue(summary?.confirmedAppointmentsToday)}
             </p>
           </div>
         </Card>
       </div>
 
-      {/* Directorio de Profesionales Médicos (Tabla Resumen) */}
-      <Card className="p-0 overflow-hidden border-med-border">
-        {/* Cabecera de la tabla con Buscador */}
-        <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-med-border">
+      <Card className="overflow-hidden p-0">
+        <div className="flex flex-col justify-between gap-4 border-b border-med-border p-5 sm:flex-row sm:items-center">
           <h2 className="text-base font-bold text-med-primary-900">
             Directorio de Profesionales Médicos
           </h2>
           <div className="relative w-full sm:w-72">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-med-text-muted">
               <svg
-                className="w-4 h-4"
+                className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -193,78 +202,46 @@ function OverviewPage() {
             <input
               type="text"
               placeholder="Buscar por nombre..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-med-primary-50/70 border border-med-border rounded-lg text-med-text-main placeholder-med-text-muted focus:outline-none focus:ring-1 focus:ring-med-primary-600"
+              aria-label="Buscar por nombre"
+              className="w-full rounded-lg border border-med-border bg-med-primary-50/70 py-1.5 pl-9 pr-3 text-xs text-med-text-main placeholder-med-text-muted focus:outline-none focus:ring-1 focus:ring-med-primary-600"
             />
           </div>
         </div>
 
-        {/* Tabla */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-med-primary-50/70 text-[11px] uppercase tracking-wider text-med-text-sub border-b border-med-border">
-              <tr>
-                <th className="px-6 py-3.5">Nombre del Doctor</th>
-                <th className="px-6 py-3.5">Especialidad</th>
-                <th className="px-6 py-3.5">Estado de Disponibilidad</th>
-                <th className="px-6 py-3.5 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-med-border-subtle text-sm">
-              {previewDoctors.map((doc) => (
-                <tr
-                  key={doc.id}
-                  className="hover:bg-gray-50/70 transition-colors"
-                >
-                  <td className="px-6 py-4 flex items-center gap-3">
-                    <span className="w-9 h-9 rounded-full bg-med-primary-100 flex items-center justify-center text-lg">
-                      {doc.avatar}
-                    </span>
-                    <span className="font-semibold text-med-primary-900">
-                      {doc.name}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-med-text-sub">
-                    {doc.specialty}
-                  </td>
-                  <td className="px-6 py-4">
-                    {doc.statusType === 'active' ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-med-active-bg text-med-active-text">
-                        <span className="w-1.5 h-1.5 rounded-full bg-med-active-text" />
-                        {doc.status}
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-med-leave-bg text-med-leave-text">
-                        <span className="w-1.5 h-1.5 rounded-full bg-med-leave-text" />
-                        {doc.status}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => navigate('/admin/doctors')}
-                      className="text-xs font-semibold text-med-primary-700 hover:text-med-primary-900"
-                    >
-                      Ver Detalle
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="p-4">
+          {isLoading ? (
+            <p
+              role="status"
+              className="py-8 text-center text-sm text-med-text-sub"
+            >
+              Cargando médicos...
+            </p>
+          ) : error && !summary ? (
+            <p
+              role="alert"
+              className="py-8 text-center text-sm text-med-text-sub"
+            >
+              No se pudo cargar el directorio de médicos.
+            </p>
+          ) : (
+            <DataTable
+              caption="Directorio de profesionales médicos"
+              columns={doctorColumns}
+              rows={summary?.doctors ?? []}
+              getRowKey={(doctor) => doctor.id}
+              emptyMessage="No hay médicos registrados"
+            />
+          )}
         </div>
 
-        {/* Paginador inferior normalizado */}
-        <div className="p-4 bg-med-primary-50/50 border-t border-med-border flex items-center justify-between text-xs text-med-text-muted">
-          <span>Mostrando 3 de 124 registros</span>
-          <div className="flex items-center gap-1">
-            <button className="px-2.5 py-1 border border-med-border rounded bg-white text-med-text-sub hover:bg-gray-50">
-              ‹
-            </button>
-            <button className="px-2.5 py-1 border border-med-border rounded bg-white text-med-text-sub hover:bg-gray-50">
-              ›
-            </button>
+        {summary?.doctors.length > 0 && (
+          <div className="flex items-center justify-between border-t border-med-border bg-med-primary-50/50 p-4 text-xs text-med-text-muted">
+            <span>
+              Mostrando {summary.doctors.length} de {summary.doctorsCount}{' '}
+              registros
+            </span>
           </div>
-        </div>
+        )}
       </Card>
     </div>
   );
