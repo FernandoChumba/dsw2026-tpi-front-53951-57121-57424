@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
+import ConfirmDialog from '../../shared/components/ConfirmDialog';
 import EmptyState from '../../shared/components/EmptyState';
 import FormMessage from '../../shared/components/FormMessage';
 import StatusBadge from '../../shared/components/StatusBadge';
@@ -9,7 +11,22 @@ import usePatientAppointments from '../hooks/usePatientAppointments';
 
 function AppointmentsPage() {
   const navigate = useNavigate();
-  const { appointments, isLoading, error, reload } = usePatientAppointments();
+  const { appointments, isLoading, error, reload, cancel, isCancelling } =
+    usePatientAppointments();
+  const [appointmentToCancel, setAppointmentToCancel] = useState(null);
+  const [notice, setNotice] = useState(null);
+
+  async function confirmCancellation() {
+    const result = await cancel(appointmentToCancel.id);
+
+    if (result) {
+      setNotice(
+        result.success
+          ? { type: 'success', message: 'El turno se canceló correctamente.' }
+          : { type: 'error', message: result.message }
+      );
+    }
+  }
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
@@ -26,6 +43,8 @@ function AppointmentsPage() {
           Solicitar nuevo turno
         </Button>
       </div>
+
+      {notice && <FormMessage type={notice.type}>{notice.message}</FormMessage>}
 
       {isLoading ? (
         <p role="status">Cargando turnos…</p>
@@ -66,10 +85,31 @@ function AppointmentsPage() {
                   {formatTime(appointment.startTime)}
                 </strong>
               </p>
+              <Button
+                variant="outline"
+                className="min-h-11"
+                disabled={isCancelling}
+                onClick={() => {
+                  setNotice(null);
+                  setAppointmentToCancel(appointment);
+                }}
+              >
+                Cancelar turno
+              </Button>
             </Card>
           ))}
         </div>
       )}
+      <ConfirmDialog
+        isOpen={Boolean(appointmentToCancel)}
+        title="Cancelar turno"
+        description="¿Querés cancelar este turno?"
+        confirmLabel="Cancelar turno"
+        cancelLabel="Volver"
+        variant="danger"
+        onClose={() => setAppointmentToCancel(null)}
+        onConfirm={confirmCancellation}
+      />
     </div>
   );
 }

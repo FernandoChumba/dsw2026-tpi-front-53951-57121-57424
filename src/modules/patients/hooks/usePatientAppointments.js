@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useAuth from '../../auth/hook/useAuth';
 import { getApiError } from '../../shared/helpers/apiError';
+import { cancelAppointment } from '../services/cancelAppointment';
 import { getPatientAppointments } from '../services/getPatientAppointments';
 
 export default function usePatientAppointments() {
@@ -9,6 +10,8 @@ export default function usePatientAppointments() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const cancellationPending = useRef(false);
 
   useEffect(() => {
     let ignore = false;
@@ -43,10 +46,43 @@ export default function usePatientAppointments() {
     };
   }, [dni, reloadKey]);
 
+  const reload = () => setReloadKey((key) => key + 1);
+
+  async function cancel(id) {
+    if (!id || cancellationPending.current) return;
+
+    cancellationPending.current = true;
+    setIsCancelling(true);
+
+    try {
+      await cancelAppointment(id);
+      setAppointments((current) => current.filter((item) => item.id !== id));
+      reload();
+
+      return { success: true };
+    } catch (requestError) {
+      const apiError = getApiError(requestError);
+
+      if (
+        requestError.response?.status === 409 &&
+        apiError.code === 'APPOINTMENT_INVALID_STATUS'
+      ) {
+        reload();
+      }
+
+      return { success: false, message: apiError.message };
+    } finally {
+      cancellationPending.current = false;
+      setIsCancelling(false);
+    }
+  }
+
   return {
     appointments,
     isLoading,
     error,
-    reload: () => setReloadKey((key) => key + 1),
+    reload,
+    cancel,
+    isCancelling,
   };
 }
