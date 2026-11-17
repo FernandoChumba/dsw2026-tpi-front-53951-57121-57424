@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import DataTable from '../../shared/components/DataTable';
 import FormMessage from '../../shared/components/FormMessage';
@@ -26,6 +26,7 @@ const columns = [
 ];
 
 export default function SpecialtiesPage() {
+  const { state } = useLocation();
   const {
     search,
     pageIndex,
@@ -41,6 +42,9 @@ export default function SpecialtiesPage() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
+      {state?.specialtyMessage && (
+        <FormMessage type="success">{state.specialtyMessage}</FormMessage>
+      )}
       <PageHeader
         title="Directorio de especialidades"
         description="Consultá y buscá especialidades médicas."
