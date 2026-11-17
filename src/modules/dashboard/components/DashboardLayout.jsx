@@ -37,7 +37,7 @@ function DashboardLayout() {
     },
     {
       to: '/admin/doctors',
-      label: 'Doctores',
+      label: 'Médicos',
       icon: (
         <svg
           className="w-5 h-5"
@@ -112,10 +112,10 @@ function DashboardLayout() {
           {/* Brand Logo Header */}
           <div className="p-6 border-b border-med-border-subtle">
             <h2 className="text-base font-bold text-med-primary-900 leading-tight">
-              Admin Portal
+              Portal administrativo
             </h2>
             <span className="text-xs font-medium text-med-text-muted">
-              Healthcare Management
+              Gestión de salud
             </span>
           </div>
 
@@ -197,7 +197,7 @@ function DashboardLayout() {
               MC
             </div>
             <span className="font-bold text-sm text-med-primary-900">
-              Medical Center
+              Centro médico
             </span>
           </div>
           <button

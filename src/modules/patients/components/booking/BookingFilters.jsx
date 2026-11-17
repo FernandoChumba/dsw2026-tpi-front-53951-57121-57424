@@ -46,7 +46,7 @@ export default function BookingFilters({
     return (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Select
-          label="Seleccionar Especialidad"
+          label="Especialidad"
           value={specialtyId}
           onChange={(event) => onSpecialtyChange(event.target.value)}
         >
@@ -60,7 +60,7 @@ export default function BookingFilters({
 
         {/* El médico se habilita recién cuando hay especialidad elegida. */}
         <Select
-          label="Seleccionar Doctor"
+          label="Médico"
           value={doctorId}
           disabled={!specialtyId}
           onChange={(event) => onDoctorChange(event.target.value)}
