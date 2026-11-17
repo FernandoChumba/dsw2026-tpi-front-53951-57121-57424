@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../../shared/components/Button';
+import ConfirmDialog from '../../shared/components/ConfirmDialog';
 import DataTable from '../../shared/components/DataTable';
 import FormMessage from '../../shared/components/FormMessage';
 import PageHeader from '../../shared/components/PageHeader';
@@ -10,23 +12,37 @@ import useSpecialties from '../hooks/useSpecialties';
 const columns = [
   { key: 'name', header: 'Especialidad' },
   { key: 'description', header: 'Descripción' },
-  {
+];
+
+function actionColumn(onRemove) {
+  return {
     key: 'actions',
     header: 'Acciones',
-    render: ({ id, name }) => (
-      <Link
-        to={`/admin/specialties/${encodeURIComponent(id)}/edit`}
-        aria-label={`Editar ${name}`}
-        className="inline-flex min-h-11 items-center rounded-lg border border-med-border px-3 text-med-primary-900 hover:bg-med-primary-50"
-      >
-        Editar
-      </Link>
+    render: (specialty) => (
+      <div className="flex flex-wrap gap-2">
+        <Link
+          to={`/admin/specialties/${encodeURIComponent(specialty.id)}/edit`}
+          aria-label={`Editar ${specialty.name}`}
+          className="inline-flex min-h-11 items-center rounded-lg border border-med-border px-3 text-med-primary-900 hover:bg-med-primary-50"
+        >
+          Editar
+        </Link>
+        <Button
+          variant="outline"
+          aria-label={`Eliminar ${specialty.name}`}
+          onClick={() => onRemove(specialty)}
+        >
+          Eliminar
+        </Button>
+      </div>
     ),
-  },
-];
+  };
+}
 
 export default function SpecialtiesPage() {
   const { state } = useLocation();
+  const [specialtyToRemove, setSpecialtyToRemove] = useState(null);
+  const [notice, setNotice] = useState('');
   const {
     search,
     pageIndex,
@@ -38,13 +54,19 @@ export default function SpecialtiesPage() {
     changeSearch,
     changePage,
     retry,
+    removeSpecialty,
   } = useSpecialties();
+
+  async function confirmRemoval() {
+    await removeSpecialty(specialtyToRemove.id);
+    setNotice('La especialidad se eliminó correctamente.');
+  }
+
+  const message = notice || state?.specialtyMessage;
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      {state?.specialtyMessage && (
-        <FormMessage type="success">{state.specialtyMessage}</FormMessage>
-      )}
+      {message && <FormMessage type="success">{message}</FormMessage>}
       <PageHeader
         title="Directorio de especialidades"
         description="Consultá y buscá especialidades médicas."
@@ -83,7 +105,7 @@ export default function SpecialtiesPage() {
         <div className="min-w-0">
           <DataTable
             caption="Listado de especialidades"
-            columns={columns}
+            columns={[...columns, actionColumn(setSpecialtyToRemove)]}
             rows={page.data}
             emptyMessage={
               search.trim()
@@ -101,6 +123,17 @@ export default function SpecialtiesPage() {
           )}
         </div>
       )}
+      <ConfirmDialog
+        isOpen={Boolean(specialtyToRemove)}
+        title="Eliminar especialidad"
+        description={
+          specialtyToRemove && `¿Querés eliminar ${specialtyToRemove.name}?`
+        }
+        confirmLabel="Eliminar"
+        variant="danger"
+        onClose={() => setSpecialtyToRemove(null)}
+        onConfirm={confirmRemoval}
+      />
     </div>
   );
 }

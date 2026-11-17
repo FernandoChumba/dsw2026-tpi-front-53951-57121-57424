@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getApiError } from '../../shared/helpers/apiError';
+import { deleteSpecialty } from '../services/deleteSpecialty';
 import { getSpecialties } from '../services/getSpecialties';
 
 const pageSize = 10;
@@ -22,7 +23,24 @@ export default function useSpecialties() {
         try {
           const page = await getSpecialties({ pageIndex, pageSize, name });
 
-          if (active) setResponse({ query, page, error: '' });
+          if (!active) return;
+
+          const lastPageIndex = Math.max(
+            0,
+            Math.ceil(page.total / pageSize) - 1
+          );
+
+          if (pageIndex > lastPageIndex) {
+            setQuery((previous) =>
+              previous === query
+                ? { search, pageIndex: lastPageIndex }
+                : previous
+            );
+
+            return;
+          }
+
+          setResponse({ query, page, error: '' });
         } catch (error) {
           if (active)
             setResponse({
@@ -39,7 +57,12 @@ export default function useSpecialties() {
       active = false;
       clearTimeout(timer);
     };
-  }, [isTooShort, name, pageIndex, query]);
+  }, [isTooShort, name, pageIndex, query, search]);
+
+  async function removeSpecialty(id) {
+    await deleteSpecialty(id);
+    setQuery((previous) => ({ ...previous }));
+  }
 
   return {
     search,
@@ -52,5 +75,6 @@ export default function useSpecialties() {
     changeSearch: (value) => setQuery({ search: value, pageIndex: 0 }),
     changePage: (value) => setQuery({ search, pageIndex: value }),
     retry: () => setQuery({ ...query }),
+    removeSpecialty,
   };
 }
