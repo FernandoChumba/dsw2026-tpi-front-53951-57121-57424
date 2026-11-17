@@ -115,6 +115,10 @@ const routes = [
         path: 'appointments',
         element: <AppointmentsSearchPage />,
       },
+      {
+        path: '*',
+        element: <Navigate to="/admin/home" replace />,
+      },
     ],
   },
 

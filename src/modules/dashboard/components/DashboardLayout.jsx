@@ -18,7 +18,7 @@ function DashboardLayout() {
   const navItems = [
     {
       to: '/admin/home',
-      label: 'Tablero',
+      label: 'Panel',
       icon: (
         <svg
           className="w-5 h-5"
