@@ -15,7 +15,7 @@ import useDoctors, { MIN_SEARCH_LENGTH } from '../hooks/useDoctors';
 // Enlaces con el mismo aspecto que Button: navegan a otra pantalla, por eso
 // son <Link> y no <button>.
 const linkClass =
-  'inline-flex min-h-11 items-center rounded-lg bg-med-primary-900 px-4 py-2 font-medium text-med-card shadow-sm transition hover:bg-med-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-med-primary-600';
+  'inline-flex min-h-9 items-center rounded-lg bg-med-primary-900 px-2 py-1 text-xs font-medium text-med-card shadow-sm transition hover:bg-med-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-med-primary-600';
 
 // Columnas de la tabla. Solo se muestran datos que el backend devuelve:
 // nombre, matrícula y especialidad (ver docs/api-contract.md).
@@ -42,8 +42,12 @@ function DoctorsPage() {
       key: 'actions',
       header: 'Acciones',
       render: (doctor) => (
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setSelectedDoctor(doctor)}>
+        <div className="flex flex-nowrap gap-1">
+          <Button
+            variant="outline"
+            className="min-h-9 px-2 py-1 text-xs"
+            onClick={() => setSelectedDoctor(doctor)}
+          >
             Ver detalle
           </Button>
           <Link
@@ -52,7 +56,11 @@ function DoctorsPage() {
           >
             Editar
           </Link>
-          <Button variant="danger" onClick={() => setDoctorToRemove(doctor)}>
+          <Button
+            variant="danger"
+            className="min-h-9 px-2 py-1 text-xs"
+            onClick={() => setDoctorToRemove(doctor)}
+          >
             Eliminar
           </Button>
         </div>
