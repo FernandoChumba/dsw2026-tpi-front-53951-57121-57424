@@ -19,16 +19,17 @@ function actionColumn(onRemove) {
     key: 'actions',
     header: 'Acciones',
     render: (specialty) => (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-nowrap gap-1">
         <Link
           to={`/admin/specialties/${encodeURIComponent(specialty.id)}/edit`}
           aria-label={`Editar ${specialty.name}`}
-          className="inline-flex min-h-11 items-center rounded-lg border border-med-border px-3 text-med-primary-900 hover:bg-med-primary-50"
+          className="inline-flex min-h-9 items-center rounded-lg border border-med-border px-2 py-1 text-xs text-med-primary-900 hover:bg-med-primary-50"
         >
           Editar
         </Link>
         <Button
           variant="outline"
+          className="min-h-9 px-2 py-1 text-xs"
           aria-label={`Eliminar ${specialty.name}`}
           onClick={() => onRemove(specialty)}
         >

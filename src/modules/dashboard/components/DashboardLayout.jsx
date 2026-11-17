@@ -221,7 +221,7 @@ function DashboardLayout() {
         </header>
 
         {/* Contenido de Rutas Hijas */}
-        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
+        <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:p-8">
           <Outlet />
         </main>
       </div>

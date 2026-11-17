@@ -88,12 +88,12 @@ function AvailabilityDay({
     <div
       role="group"
       aria-labelledby={labelId}
-      className="grid grid-cols-2 items-center gap-x-3 gap-y-2 px-4 py-3 sm:grid-cols-[1fr_1fr_1fr_1fr] sm:gap-4"
+      className="grid grid-cols-2 items-center gap-x-3 gap-y-2 px-4 py-3 lg:grid-cols-[1fr_1fr_1fr_1fr] lg:gap-4"
     >
       <span id={labelId} className="font-medium text-med-text-main">
         {label}
       </span>
-      <label className="inline-flex min-h-11 w-fit cursor-pointer items-center gap-2 justify-self-end sm:justify-self-start">
+      <label className="inline-flex min-h-11 w-fit cursor-pointer items-center gap-2 justify-self-end lg:justify-self-start">
         <input
           type="checkbox"
           role="switch"

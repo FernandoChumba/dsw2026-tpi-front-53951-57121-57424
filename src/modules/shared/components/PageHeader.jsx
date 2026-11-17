@@ -1,6 +1,6 @@
 export default function PageHeader({ title, description, actions }) {
   return (
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
       <div className="min-w-0">
         <h1 className="text-2xl font-bold text-med-primary-900 sm:text-3xl">
           {title}
