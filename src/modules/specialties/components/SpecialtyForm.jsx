@@ -19,7 +19,7 @@ function rules(label, minimum) {
   };
 }
 
-export default function SpecialtyForm({ onSubmit, onCancel }) {
+export default function SpecialtyForm({ specialty, onSubmit, onCancel }) {
   const pending = useRef(false);
   const {
     register,
@@ -27,7 +27,10 @@ export default function SpecialtyForm({ onSubmit, onCancel }) {
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { name: '', description: '' },
+    defaultValues: {
+      name: specialty?.name ?? '',
+      description: specialty?.description ?? '',
+    },
   });
 
   async function save(values) {
