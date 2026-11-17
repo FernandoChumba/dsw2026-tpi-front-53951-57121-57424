@@ -54,7 +54,7 @@ export default function BookingSummary({
     <form
       noValidate
       onSubmit={handleSubmit(onValid)}
-      className="flex flex-col gap-5 rounded-2xl border border-med-primary-200/60 bg-med-primary-50 p-5 sm:p-6"
+      className="fixed inset-x-0 bottom-0 z-20 flex flex-col gap-4 border-t border-med-border bg-med-card p-4 shadow-lg sm:static sm:rounded-2xl sm:border sm:border-med-primary-200/60 sm:bg-med-primary-50 sm:p-6 sm:shadow-none"
     >
       <div className="border-l-4 border-med-primary-900 pl-3.5">
         <span className="text-[10px] font-bold uppercase tracking-wider text-med-text-sub">
