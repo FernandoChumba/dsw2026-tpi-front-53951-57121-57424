@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import DataTable from '../../shared/components/DataTable';
@@ -23,19 +23,6 @@ function OverviewPage() {
       key: 'licenseNumber',
       header: 'Matrícula',
     },
-    {
-      key: 'actions',
-      header: 'Acciones',
-      render: () => (
-        <button
-          type="button"
-          onClick={() => navigate('/admin/doctors')}
-          className="text-xs font-semibold text-med-primary-700 hover:text-med-primary-900"
-        >
-          Ver Doctores
-        </button>
-      ),
-    },
   ];
 
   const metricValue = (value) => {
@@ -58,7 +45,7 @@ function OverviewPage() {
 
         <div className="flex flex-wrap items-center gap-3">
           <Button
-            onClick={() => navigate('/admin/doctors')}
+            onClick={() => navigate('/admin/doctors/new')}
             className="flex items-center gap-2"
           >
             <span>+</span>
@@ -67,7 +54,7 @@ function OverviewPage() {
 
           <Button
             variant="secondary"
-            onClick={() => navigate('/admin/specialties')}
+            onClick={() => navigate('/admin/specialties/new')}
             className="flex items-center gap-2"
           >
             <span>+</span>
@@ -182,30 +169,12 @@ function OverviewPage() {
           <h2 className="text-base font-bold text-med-primary-900">
             Directorio de Profesionales Médicos
           </h2>
-          <div className="relative w-full sm:w-72">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-med-text-muted">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </span>
-            <input
-              type="text"
-              placeholder="Buscar por nombre..."
-              aria-label="Buscar por nombre"
-              className="w-full rounded-lg border border-med-border bg-med-primary-50/70 py-1.5 pl-9 pr-3 text-xs text-med-text-main placeholder-med-text-muted focus:outline-none focus:ring-1 focus:ring-med-primary-600"
-            />
-          </div>
+          <Link
+            to="/admin/doctors"
+            className="inline-flex min-h-11 items-center self-start rounded-lg px-3 text-sm font-semibold text-med-primary-900 hover:bg-med-primary-50 focus-visible:outline-2 focus-visible:outline-med-primary-600"
+          >
+            Ver directorio completo
+          </Link>
         </div>
 
         <div className="p-4">
