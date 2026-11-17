@@ -38,9 +38,8 @@ export default function useAppointmentSearch() {
   const [optionsError, setOptionsError] = useState('');
   const [optionsKey, setOptionsKey] = useState(0);
   const [query, setQuery] = useState({});
-  const [appointments, setAppointments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [response, setResponse] = useState(null);
+  const current = response?.query === query ? response : null;
 
   useEffect(() => {
     let ignore = false;
@@ -75,16 +74,13 @@ export default function useAppointmentSearch() {
     let ignore = false;
 
     async function load() {
-      setIsLoading(true);
-      setError('');
       try {
-        const result = await searchAppointments(query);
+        const page = await searchAppointments(query);
 
-        if (!ignore) setAppointments(result.data);
+        if (!ignore) setResponse({ query, page });
       } catch (requestError) {
-        if (!ignore) setError(getApiError(requestError).message);
-      } finally {
-        if (!ignore) setIsLoading(false);
+        if (!ignore)
+          setResponse({ query, error: getApiError(requestError).message });
       }
     }
     load();
@@ -135,9 +131,11 @@ export default function useAppointmentSearch() {
     optionsLoading,
     optionsError,
     retryOptions: () => setOptionsKey((key) => key + 1),
-    appointments,
-    isLoading,
-    error,
+    page: current?.page,
+    isLoading: !current,
+    error: current?.error,
+    changePage: (pageIndex) =>
+      setQuery((previous) => ({ ...previous, pageIndex })),
     retry: () => setQuery((current) => ({ ...current })),
   };
 }
