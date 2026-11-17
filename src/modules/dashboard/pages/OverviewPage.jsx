@@ -12,7 +12,7 @@ function OverviewPage() {
   const doctorColumns = [
     {
       key: 'name',
-      header: 'Nombre del Doctor',
+      header: 'Nombre del médico',
     },
     {
       key: 'specialty',
@@ -49,7 +49,7 @@ function OverviewPage() {
             className="flex items-center gap-2"
           >
             <span>+</span>
-            <span>Agregar Nuevo Doctor</span>
+            <span>Registrar médico</span>
           </Button>
 
           <Button
@@ -58,7 +58,7 @@ function OverviewPage() {
             className="flex items-center gap-2"
           >
             <span>+</span>
-            <span>Agregar Nueva Especialidad</span>
+            <span>Registrar especialidad</span>
           </Button>
         </div>
       </div>
@@ -94,7 +94,7 @@ function OverviewPage() {
           </div>
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
-              Doctores Activos
+              M?dicos activos
             </span>
             <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
               {metricValue(summary?.doctorsCount)}
@@ -123,7 +123,7 @@ function OverviewPage() {
           </div>
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
-              Especialidades Activas
+              Especialidades activas
             </span>
             <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
               {metricValue(summary?.specialtiesCount)}
@@ -155,7 +155,7 @@ function OverviewPage() {
           </div>
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
-              Turnos Confirmados Para Hoy
+              Turnos confirmados para hoy
             </span>
             <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
               {metricValue(summary?.confirmedAppointmentsToday)}

@@ -21,7 +21,7 @@ export default function DoctorAvailabilityPage() {
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(14rem,1fr)_2fr]">
         <Card className="flex flex-col gap-4 p-4">
           <Select
-            label="Profesional"
+            label="Médico"
             value={selectedDoctor?.id ?? ''}
             disabled={catalog.loading || Boolean(catalog.error)}
             onChange={(event) => {

@@ -73,10 +73,10 @@ function AdminLoginPage() {
         <div className="p-6 sm:p-10">
           <div className="mb-6">
             <h2 className="text-xl font-bold text-med-primary-900">
-              Bienvenido de nuevo
+              Te damos la bienvenida
             </h2>
             <p className="text-sm text-med-text-sub mt-1 leading-relaxed">
-              Autenticate para acceder al portal de proveedores.
+              Iniciá sesión para acceder al portal administrativo.
             </p>
           </div>
 
@@ -156,7 +156,7 @@ function AdminLoginPage() {
           </svg>
           <p className="text-xs text-med-text-sub leading-relaxed">
             <strong className="text-med-text-main font-semibold">
-              Solo acceso seguro:
+              Acceso seguro:
             </strong>{' '}
             Este sistema es para personal médico autorizado. Los intentos de
             acceso no autorizados se registran y se monitorean.
