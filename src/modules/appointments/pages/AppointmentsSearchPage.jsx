@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import DataTable from '../../shared/components/DataTable';
@@ -6,7 +7,9 @@ import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import Select from '../../shared/components/Select';
 import StatusBadge from '../../shared/components/StatusBadge';
+import TablePagination from '../../shared/components/TablePagination';
 import { formatDate, formatTime } from '../../shared/helpers/formatDate';
+import AppointmentDetailModal from '../components/AppointmentDetailModal';
 import useAppointmentSearch from '../hooks/useAppointmentSearch';
 
 const columns = [
@@ -43,6 +46,7 @@ const columns = [
 ];
 
 export default function AppointmentsSearchPage() {
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const {
     register,
     errors,
@@ -54,11 +58,25 @@ export default function AppointmentsSearchPage() {
     optionsLoading,
     optionsError,
     retryOptions,
-    appointments,
+    page,
+    changePage,
     isLoading,
     error,
     retry,
   } = useAppointmentSearch();
+
+  const resultColumns = [
+    ...columns,
+    {
+      key: 'actions',
+      header: 'Acciones',
+      render: (row) => (
+        <Button variant="outline" onClick={() => setSelectedAppointment(row)}>
+          Ver detalle
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
@@ -142,25 +160,32 @@ export default function AppointmentsSearchPage() {
               Reintentar
             </Button>
           </div>
-        ) : appointments.length === 0 ? (
+        ) : page.data.length === 0 ? (
           <EmptyState
             title="No se encontraron turnos"
             description="Probá cambiar los filtros de búsqueda."
           />
         ) : (
           <>
-            <p className="mb-3 text-sm text-med-text-sub">
-              Se muestran hasta 10 resultados.
-            </p>
             <DataTable
               caption="Turnos encontrados"
-              columns={columns}
-              rows={appointments}
+              columns={resultColumns}
+              rows={page.data}
               getRowKey={(row) => row.appointmentsId}
+            />
+            <TablePagination
+              pageIndex={page.pageIndex}
+              pageSize={page.pageSize}
+              total={page.total}
+              onPageChange={changePage}
             />
           </>
         )}
       </div>
+      <AppointmentDetailModal
+        appointment={selectedAppointment}
+        onClose={() => setSelectedAppointment(null)}
+      />
     </div>
   );
 }
