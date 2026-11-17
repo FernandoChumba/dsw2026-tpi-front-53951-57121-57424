@@ -7,12 +7,15 @@ import EmptyState from '../../shared/components/EmptyState';
 import FormMessage from '../../shared/components/FormMessage';
 import StatusBadge from '../../shared/components/StatusBadge';
 import { formatDate, formatTime } from '../../shared/helpers/formatDate';
+import AppointmentHistory from '../components/appointments/AppointmentHistory';
+import useAppointmentHistory from '../hooks/useAppointmentHistory';
 import usePatientAppointments from '../hooks/usePatientAppointments';
 
 function AppointmentsPage() {
   const navigate = useNavigate();
   const { appointments, isLoading, error, reload, cancel, isCancelling } =
     usePatientAppointments();
+  const history = useAppointmentHistory();
   const [appointmentToCancel, setAppointmentToCancel] = useState(null);
   const [notice, setNotice] = useState(null);
 
@@ -20,6 +23,8 @@ function AppointmentsPage() {
     const result = await cancel(appointmentToCancel.id);
 
     if (result) {
+      if (result.success) history.changePage(0);
+
       setNotice(
         result.success
           ? { type: 'success', message: 'El turno se canceló correctamente.' }
@@ -36,7 +41,7 @@ function AppointmentsPage() {
             Mis turnos médicos
           </h1>
           <p className="mt-1 text-sm text-med-text-sub">
-            Consultá tus turnos activos.
+            Consultá tus turnos activos y tu historial.
           </p>
         </div>
         <Button className="min-h-11" onClick={() => navigate('/')}>
@@ -100,6 +105,7 @@ function AppointmentsPage() {
           ))}
         </div>
       )}
+      <AppointmentHistory {...history} />
       <ConfirmDialog
         isOpen={Boolean(appointmentToCancel)}
         title="Cancelar turno"
