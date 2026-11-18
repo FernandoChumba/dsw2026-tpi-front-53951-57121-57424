@@ -101,11 +101,18 @@ function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-med-bg flex">
+    <div className="min-h-screen bg-med-bg flex [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-2 [&_a:focus-visible]:outline-med-primary-600 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-2 [&_button:focus-visible]:outline-med-primary-600">
+      <a
+        href="#admin-content"
+        className="sr-only fixed left-4 top-4 z-50 rounded-lg bg-med-card p-3 text-med-primary-900 focus:not-sr-only"
+      >
+        Saltar al contenido
+      </a>
       {/* Sidebar fijo para desktop / retráctil en móvil */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-med-border flex flex-col justify-between transition-transform duration-200 sm:translate-x-0 ${
-          openMobileMenu ? 'translate-x-0' : '-translate-x-full'
+        id="admin-navigation"
+        className={`fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto bg-white border-r border-med-border flex-col justify-between sm:flex ${
+          openMobileMenu ? 'flex' : 'hidden'
         }`}
       >
         <div>
@@ -120,7 +127,7 @@ function DashboardLayout() {
           </div>
 
           {/* Navigation Items */}
-          <nav className="p-3 space-y-1">
+          <nav aria-label="Administración" className="p-3 space-y-1">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -182,7 +189,9 @@ function DashboardLayout() {
 
       {/* Backdrop para móvil */}
       {openMobileMenu && (
-        <div
+        <button
+          type="button"
+          aria-label="Cerrar menú de administración"
           onClick={() => setOpenMobileMenu(false)}
           className="fixed inset-0 bg-slate-900/40 z-30 sm:hidden"
         />
@@ -201,6 +210,10 @@ function DashboardLayout() {
             </span>
           </div>
           <button
+            type="button"
+            aria-label="Menú de administración"
+            aria-expanded={openMobileMenu}
+            aria-controls="admin-navigation"
             onClick={() => setOpenMobileMenu(!openMobileMenu)}
             className="p-1.5 rounded-lg border border-med-border text-med-text-sub"
           >
@@ -221,7 +234,11 @@ function DashboardLayout() {
         </header>
 
         {/* Contenido de Rutas Hijas */}
-        <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:p-8">
+        <main
+          id="admin-content"
+          tabIndex={-1}
+          className="mx-auto min-w-0 w-full max-w-7xl flex-1 p-4 lg:p-8"
+        >
           <Outlet />
         </main>
       </div>
