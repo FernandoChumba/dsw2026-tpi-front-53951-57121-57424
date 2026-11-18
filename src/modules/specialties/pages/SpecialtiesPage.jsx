@@ -8,6 +8,7 @@ import PageHeader from '../../shared/components/PageHeader';
 import SearchInput from '../../shared/components/SearchInput';
 import TablePagination from '../../shared/components/TablePagination';
 import useSpecialties from '../hooks/useSpecialties';
+import { FIELD_LIMITS } from '../../shared/helpers/inputRules';
 
 const columns = [
   { key: 'name', header: 'Especialidad' },
@@ -84,7 +85,7 @@ export default function SpecialtiesPage() {
         <SearchInput
           label="Buscar especialidad"
           value={search}
-          maxLength={100}
+          maxLength={FIELD_LIMITS.search}
           onChange={(event) => changeSearch(event.target.value)}
           error={isTooShort ? 'Ingresá al menos 3 caracteres para buscar.' : ''}
         />

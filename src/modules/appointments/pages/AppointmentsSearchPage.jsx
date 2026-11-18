@@ -11,6 +11,7 @@ import TablePagination from '../../shared/components/TablePagination';
 import { formatDate, formatTime } from '../../shared/helpers/formatDate';
 import AppointmentDetailModal from '../components/AppointmentDetailModal';
 import useAppointmentSearch from '../hooks/useAppointmentSearch';
+import { digitsOnly, FIELD_LIMITS } from '../../shared/helpers/inputRules';
 
 const columns = [
   {
@@ -105,13 +106,16 @@ export default function AppointmentsSearchPage() {
             <Input
               label="DNI"
               inputMode="numeric"
+              maxLength={FIELD_LIMITS.dni}
               error={errors.dni?.message}
-              {...register('dni', {
-                validate: (value) =>
-                  !value.trim() ||
-                  /^\d{7,8}$/.test(value.trim()) ||
-                  'Ingresá un DNI de 7 u 8 dígitos.',
-              })}
+              {...digitsOnly(
+                register('dni', {
+                  validate: (value) =>
+                    !value.trim() ||
+                    /^\d{7,8}$/.test(value.trim()) ||
+                    'Ingresá un DNI de 7 u 8 dígitos.',
+                })
+              )}
             />
             <Select
               label="Especialidad"

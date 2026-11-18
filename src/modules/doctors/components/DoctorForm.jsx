@@ -6,6 +6,7 @@ import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import Select from '../../shared/components/Select';
 import { getApiError } from '../../shared/helpers/apiError';
+import { FIELD_LIMITS, NAME_PATTERN } from '../../shared/helpers/inputRules';
 
 // Campos del formulario que pueden recibir un error del backend.
 const FIELDS = ['name', 'licenseNumber', 'specialtyId'];
@@ -82,12 +83,14 @@ export default function DoctorForm({
           label="Nombre completo"
           placeholder="Nombre y apellido"
           required
+          maxLength={FIELD_LIMITS.name}
           error={errors.name?.message}
           {...register('name', {
             setValueAs: (value) => value.trim(),
             required: 'Ingresá el nombre completo.',
             minLength: { value: 3, message: 'Ingresá al menos 3 caracteres.' },
             maxLength: { value: 100, message: 'Ingresá hasta 100 caracteres.' },
+            pattern: NAME_PATTERN,
           })}
         />
         <div className="grid gap-4 sm:grid-cols-2">
@@ -113,10 +116,15 @@ export default function DoctorForm({
           <Input
             label="Matrícula médica"
             required
+            maxLength={FIELD_LIMITS.licenseNumber}
             error={errors.licenseNumber?.message}
             {...register('licenseNumber', {
               setValueAs: (value) => value.trim(),
               required: 'Ingresá la matrícula médica.',
+              maxLength: {
+                value: FIELD_LIMITS.licenseNumber,
+                message: `Ingresá hasta ${FIELD_LIMITS.licenseNumber} caracteres.`,
+              },
             })}
           />
         </div>

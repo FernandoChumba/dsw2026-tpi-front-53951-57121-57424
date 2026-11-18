@@ -5,6 +5,7 @@ import Button from '../../shared/components/Button';
 import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import { getApiError } from '../../shared/helpers/apiError';
+import { FIELD_LIMITS } from '../../shared/helpers/inputRules';
 import useAuth from '../hook/useAuth';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,6 +91,7 @@ function AdminLoginPage() {
               label="Correo electrónico"
               placeholder="admin@ejemplo.com"
               autoComplete="username"
+              maxLength={FIELD_LIMITS.adminEmail}
               error={errors.email?.message}
               {...register('email', {
                 required: 'Ingresá tu correo electrónico.',

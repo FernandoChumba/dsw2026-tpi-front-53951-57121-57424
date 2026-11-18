@@ -6,8 +6,9 @@ import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import Textarea from '../../shared/components/Textarea';
 import { getApiError } from '../../shared/helpers/apiError';
+import { FIELD_LIMITS, NAME_PATTERN } from '../../shared/helpers/inputRules';
 
-function rules(label, minimum) {
+function rules(label, minimum, maximum) {
   return {
     setValueAs: (value) => value.trim(),
     required: `Ingresá ${label}.`,
@@ -15,7 +16,10 @@ function rules(label, minimum) {
       value: minimum,
       message: `Ingresá al menos ${minimum} caracteres.`,
     },
-    maxLength: { value: 100, message: 'Ingresá hasta 100 caracteres.' },
+    maxLength: {
+      value: maximum,
+      message: `Ingresá hasta ${maximum} caracteres.`,
+    },
   };
 }
 
@@ -66,14 +70,22 @@ export default function SpecialtyForm({ specialty, onSubmit, onCancel }) {
         <Input
           label="Nombre"
           required
+          maxLength={FIELD_LIMITS.name}
           error={errors.name?.message}
-          {...register('name', rules('el nombre', 3))}
+          {...register('name', {
+            ...rules('el nombre', 3, FIELD_LIMITS.name),
+            pattern: NAME_PATTERN,
+          })}
         />
         <Textarea
           label="Descripción"
           required
+          maxLength={FIELD_LIMITS.description}
           error={errors.description?.message}
-          {...register('description', rules('la descripción', 10))}
+          {...register(
+            'description',
+            rules('la descripción', 10, FIELD_LIMITS.description)
+          )}
         />
         {errors.root?.message && (
           <FormMessage type="error">{errors.root.message}</FormMessage>
