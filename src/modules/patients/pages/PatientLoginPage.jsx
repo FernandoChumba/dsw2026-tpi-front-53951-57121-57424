@@ -6,6 +6,7 @@ import FormMessage from '../../shared/components/FormMessage';
 import Input from '../../shared/components/Input';
 import useAuth from '../../auth/hook/useAuth';
 import { getApiError } from '../../shared/helpers/apiError';
+import { digitsOnly, FIELD_LIMITS } from '../../shared/helpers/inputRules';
 
 // Formato de correo simple: algo@algo.algo
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -99,6 +100,7 @@ function PatientLoginPage() {
             label="Correo Electrónico"
             type="email"
             autoComplete="email"
+            maxLength={FIELD_LIMITS.email}
             placeholder="paciente@ejemplo.com"
             error={errors.email?.message}
             {...register('email', {
@@ -117,15 +119,18 @@ function PatientLoginPage() {
             type="text"
             inputMode="numeric"
             autoComplete="off"
+            maxLength={FIELD_LIMITS.dni}
             placeholder="Número de documento"
             error={errors.dni?.message}
-            {...register('dni', {
-              required: 'Ingresá tu DNI.',
-              pattern: {
-                value: DNI_PATTERN,
-                message: 'El DNI debe tener 7 u 8 números, sin puntos.',
-              },
-            })}
+            {...digitsOnly(
+              register('dni', {
+                required: 'Ingresá tu DNI.',
+                pattern: {
+                  value: DNI_PATTERN,
+                  message: 'El DNI debe tener 7 u 8 números, sin puntos.',
+                },
+              })
+            )}
           />
 
           {errorMessage && (

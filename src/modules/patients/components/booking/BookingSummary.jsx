@@ -81,6 +81,7 @@ export default function BookingSummary({
       <Textarea
         label="Motivo de la consulta"
         placeholder="Contá brevemente por qué pedís el turno."
+        maxLength={REASON_MAX_LENGTH}
         error={errors.reason?.message}
         disabled={isSubmitting}
         {...register('reason', { validate: validateReason })}

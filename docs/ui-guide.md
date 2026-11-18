@@ -62,6 +62,8 @@ En `ConfirmDialog`, `onConfirm` puede devolver una promesa. Mientras se resuelve
 
 Pasar `{...register('campo')}` a `Input`, `Select` o `Textarea` y el mensaje de validación a `error`. Cada campo vincula su etiqueta y el error con el control nativo.
 
+Cada campo de texto limita lo que se puede escribir, no solo lo que se puede enviar: pasar `maxLength` con el valor de `FIELD_LIMITS` (`shared/helpers/inputRules.js`), que coincide con el backend. Los campos numéricos, como el DNI, envuelven el `register` con `digitsOnly` para descartar todo lo que no sea un dígito. Los nombres de personas y especialidades usan `NAME_PATTERN`.
+
 En `DataTable`, cada columna recibe `key`, `header` y, cuando haga falta, `render(row)`. Las filas usan `row.id` como clave por defecto. Si el recurso tiene otro identificador, pasar `getRowKey`. La tabla permite desplazamiento horizontal dentro de su contenedor en pantallas angostas.
 
 En `shared/helpers/formatDate.js`, `formatDate` presenta fechas `YYYY-MM-DD` con formato argentino sin desplazarlas por zona horaria. `formatTime` muestra horas `HH:mm` a partir de valores `HH:mm` o `HH:mm:ss`. Ambos devuelven una cadena vacía si el valor es inválido.

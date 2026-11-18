@@ -11,6 +11,7 @@ import SearchInput from '../../shared/components/SearchInput';
 import TablePagination from '../../shared/components/TablePagination';
 import DoctorDetailModal from '../components/DoctorDetailModal';
 import useDoctors, { MIN_SEARCH_LENGTH } from '../hooks/useDoctors';
+import { FIELD_LIMITS } from '../../shared/helpers/inputRules';
 
 // Enlaces con el mismo aspecto que Button: navegan a otra pantalla, por eso
 // son <Link> y no <button>.
@@ -154,6 +155,7 @@ function DoctorsPage() {
         <SearchInput
           label="Buscar médico"
           placeholder="Buscar médico por nombre…"
+          maxLength={FIELD_LIMITS.search}
           value={search}
           onChange={(event) => {
             setNotice('');

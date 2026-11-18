@@ -94,7 +94,7 @@ function OverviewPage() {
           </div>
           <div className="mt-6">
             <span className="text-[11px] font-bold uppercase tracking-wider text-med-text-sub">
-              M?dicos activos
+              Médicos activos
             </span>
             <p className="mt-1 text-3xl font-extrabold text-med-primary-900 sm:text-4xl">
               {metricValue(summary?.doctorsCount)}
