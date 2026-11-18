@@ -167,15 +167,19 @@ function DoctorsPage() {
         />
       </div>
 
-      <Card className="overflow-hidden p-0">
-        {renderContent()}
-        <TablePagination
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          total={total}
-          onPageChange={goToPage}
-        />
-      </Card>
+      {!isSearchTooShort && (
+        <Card className="overflow-hidden p-0">
+          {renderContent()}
+          {!isLoading && !error && (
+            <TablePagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={total}
+              onPageChange={goToPage}
+            />
+          )}
+        </Card>
+      )}
       <ConfirmDialog
         isOpen={Boolean(doctorToRemove)}
         title="Eliminar médico"
