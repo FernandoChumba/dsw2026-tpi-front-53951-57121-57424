@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getDoctors } from '../../doctors/services/getDoctors';
 import { getSpecialties } from '../../specialties/services/getSpecialties';
+import { getApiError } from '../../shared/helpers/apiError';
 import { getTodayAppointments } from '../services/getTodayAppointments';
-
-function getErrorMessage(error) {
-  return (
-    error?.response?.data?.message ||
-    error?.message ||
-    'No se pudieron cargar los indicadores del panel.'
-  );
-}
 
 function useDashboardSummary() {
   const [summary, setSummary] = useState(null);
@@ -33,7 +26,9 @@ function useDashboardSummary() {
         !Array.isArray(doctorPreviewPage.data) ||
         !Array.isArray(appointments)
       ) {
-        throw new Error('La API devolvio datos con un formato inesperado.');
+        setError('No se pudieron cargar los indicadores del panel.');
+
+        return;
       }
 
       setSummary({
@@ -45,7 +40,7 @@ function useDashboardSummary() {
         ).length,
       });
     } catch (loadError) {
-      setError(getErrorMessage(loadError));
+      setError(getApiError(loadError).message);
     } finally {
       setIsLoading(false);
     }
