@@ -5,8 +5,8 @@ El profesor publicó una nueva versión del enunciado (`DSW2026_TPI_MOD_17_NOV.p
 ## Resumen
 
 - **Mockups:** son el cambio real. Se rehicieron las 13 imágenes y ya están en `docs/mockups/`.
-- **Texto:** parte de una copia anterior. El historial interno termina en la versión 1.2 (8/07/2026) y faltan secciones que la v1.7 sí tenía.
-- **Decisión vigente:** el contrato de la API sigue siendo el de `docs/api-contract.md` (v1.7 y backend) hasta que el profesor confirme lo contrario. Los ajustes visuales siguen los mockups nuevos.
+- **Texto:** se tomó de una copia anterior del enunciado. El historial interno termina en la versión 1.2 (8/07/2026) y faltan secciones que la v1.7 sí tenía.
+- **Decisión vigente:** el contrato de la API sigue siendo el de `docs/api-contract.md` (v1.7 y backend). Los ajustes visuales siguen los mockups nuevos.
 
 ## Mockups
 
@@ -28,7 +28,7 @@ El profesor publicó una nueva versión del enunciado (`DSW2026_TPI_MOD_17_NOV.p
 
 ## Texto
 
-Diferencias entre la v1.7 y el PDF del 17/11. Ninguna se aplica hasta que el profesor la confirme (F45).
+Diferencias entre la v1.7 y el PDF del 17/11. Se registran como referencia, pero no se aplican: el texto nuevo corresponde a una copia anterior y la v1.7 sigue vigente.
 
 | Tema                      | v1.7                                                           | 17/11                                       |
 | ------------------------- | -------------------------------------------------------------- | ------------------------------------------- |
@@ -46,9 +46,11 @@ Diferencias entre la v1.7 y el PDF del 17/11. Ninguna se aplica hasta que el pro
 ## Consultas para el profesor
 
 1. **Login del paciente:** el texto pide correo y DNI, pero el mockup muestra "Contraseña". ¿Cuál vale?
-2. **Texto del enunciado:** ¿las diferencias de la tabla anterior son intencionales o el texto se editó sobre una copia anterior?
-3. **Credenciales de prueba:** ¿hay que mostrarlas en las pantallas de login, como en los mockups?
-4. **Botón de copiar en disponibilidad:** ¿qué debe copiar (el horario de un día a los demás días)?
+2. **Botón de copiar en disponibilidad:** ¿qué debe copiar (el horario de un día a los demás días)?
+
+## Credenciales de prueba
+
+Los mockups de login muestran un recuadro con credenciales de prueba. No se agrega a las pantallas: la regla 12 de `docs/tasks/README.md` prohíbe credenciales en el código y el usuario administrador lo crea el backend desde su configuración. Las credenciales para probar la aplicación se documentan en el README de entrega (F41).
 
 ## Datos de los mockups que no tienen respaldo en el backend
 
