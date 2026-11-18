@@ -125,7 +125,7 @@ Las tarjetas actuales F01 y F02 (fixtures y store local) se archivan: los datos 
 | Página 30      | Errores y validaciones en la UI                 | F05, formularios, F35                 |
 | Página 30      | Uso de librerías                                | Reglas 4 y 9                          |
 
-Los mockups corresponden al PDF del 17/11/2026. Las diferencias con la v1.7 están en [`docs/enunciado-17-nov.md`](../enunciado-17-nov.md).
+Los mockups corresponden a la versión 1.4 del enunciado (18/11/2026). Las diferencias con la v1.7 y los flujos obligatorios están en [`docs/enunciado-17-nov.md`](../enunciado-17-nov.md).
 
 | Mockup                             | Página | Tareas              |
 | ---------------------------------- | ------ | ------------------- |
@@ -133,7 +133,7 @@ Los mockups corresponden al PDF del 17/11/2026. Las diferencias con la v1.7 est�
 | Admin: página principal            | 21     | F33, F34            |
 | Admin: listado de médicos          | 22     | F17, F20, F23       |
 | Admin: crear médico                | 22     | F18, F19            |
-| Admin: disponibilidad horaria      | 23     | F21, F22, F45       |
+| Admin: disponibilidad horaria      | 23     | F21, F22            |
 | Admin: listado de especialidades   | 23     | F13, F16            |
 | Admin: crear especialidad          | 24     | F14, F15            |
 | Admin: búsqueda avanzada           | 24     | F31, F32            |
