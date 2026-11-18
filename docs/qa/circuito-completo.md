@@ -115,11 +115,11 @@ Se revisa que cada campo limite lo que se puede escribir, no solo lo que se pued
 
 ## Defectos
 
-| ID     | Caso    | Descripción                                                                                                                                                                                     | Responsable | Tarjeta o PR | Estado  |
-| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------ | ------- |
-| DEF-01 | D02     | El panel muestra "M?dicos activos": hay un `?` en lugar de la "é" en `src/modules/dashboard/pages/OverviewPage.jsx:97`, desde el commit `1fc77ca`                                               | Tobías      | F35          | Abierto |
-| DEF-02 | B15     | Con el backend apagado se muestra "Ocurrió un error inesperado" en lugar de "No se pudo conectar con el servidor", porque el proxy de Vite responde 500. Severidad baja: hay botón "Reintentar" | Fernando    | F49          | Abierto |
-| DEF-03 | F01–F08 | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | A definir   | —            | Abierto |
+| ID     | Caso    | Descripción                                                                                                                                                                                     | Responsable | Tarjeta o PR | Estado      |
+| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------ | ----------- |
+| DEF-01 | D02     | El panel muestra "M?dicos activos": hay un `?` en lugar de la "é" en `src/modules/dashboard/pages/OverviewPage.jsx:97`, desde el commit `1fc77ca`                                               | Braian      | PR #51       | En revisión |
+| DEF-02 | B15     | Con el backend apagado se muestra "Ocurrió un error inesperado" en lugar de "No se pudo conectar con el servidor", porque el proxy de Vite responde 500. Severidad baja: hay botón "Reintentar" | Fernando    | F49          | Abierto     |
+| DEF-03 | F01–F08 | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | Braian      | PR #51       | En revisión |
 
 ## Cierre
 
