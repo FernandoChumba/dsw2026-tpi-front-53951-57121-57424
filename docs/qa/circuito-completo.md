@@ -75,7 +75,7 @@ Comparar con `docs/mockups/`. Paciente a 1366, 390 y 360 px; administración a 1
 | ID  | Pantalla                         | Mockup                                                             | Anchos         | Resultado |
 | --- | -------------------------------- | ------------------------------------------------------------------ | -------------- | --------- |
 | D01 | Admin: login                     | `p21-admin-login.png`                                              | 1366, 700      | ⏳        |
-| D02 | Admin: página principal          | `p21-admin-principal.png`                                          | 1366, 700      | ❌ DEF-01 |
+| D02 | Admin: página principal          | `p21-admin-principal.png`                                          | 1366, 700      | ✅ DEF-01 |
 | D03 | Admin: listado de médicos        | `p22-admin-medicos-listado.png`                                    | 1366, 700      | ⏳        |
 | D04 | Admin: crear médico              | `p22-admin-medicos-crear.png`                                      | 1366, 700      | ⏳        |
 | D05 | Admin: disponibilidad horaria    | `p23-admin-disponibilidad.png`                                     | 1366, 700      | ⏳        |
@@ -94,14 +94,14 @@ Se revisa que cada campo limite lo que se puede escribir, no solo lo que se pued
 
 | ID  | Campo                                 | Regla actual en el front                      | Regla en el backend              | Observación                                     | Resultado |
 | --- | ------------------------------------- | --------------------------------------------- | -------------------------------- | ----------------------------------------------- | --------- |
-| F01 | DNI del login de paciente             | 7 u 8 números al enviar                       | 7 u 8 dígitos                    | Se pueden escribir letras y más de 8 caracteres | ❌ DEF-03 |
-| F02 | DNI de la búsqueda avanzada           | 7 u 8 números al enviar                       | Numérico                         | Se pueden escribir letras y más de 8 caracteres | ❌ DEF-03 |
-| F03 | Nombre y descripción de especialidad  | 3 a 100 caracteres al enviar                  | Nombre 3–100, descripción 10–100 | Se pueden escribir más de 100 caracteres        | ❌ DEF-03 |
-| F04 | Nombre del médico                     | 3 a 100 caracteres al enviar                  | Hasta 100                        | Se pueden escribir más de 100 caracteres        | ❌ DEF-03 |
-| F05 | Matrícula del médico                  | Obligatoria, sin máximo                       | Obligatoria, sin máximo          | No tiene límite de largo                        | ❌ DEF-03 |
-| F06 | Motivo de la consulta                 | 5 a 500 caracteres al enviar                  | 5 a 500                          | Se pueden escribir más de 500 caracteres        | ❌ DEF-03 |
-| F07 | Correos de los logins                 | Formato de correo al enviar                   | Formato de correo                | Sin máximo de largo                             | ⚠️ DEF-03 |
-| F08 | Búsquedas de médicos y especialidades | Mínimo 3 caracteres; especialidades hasta 100 | Hasta 100                        | La búsqueda de médicos no tiene máximo          | ⚠️ DEF-03 |
+| F01 | DNI del login de paciente             | 7 u 8 números al enviar                       | 7 u 8 dígitos                    | Se pueden escribir letras y más de 8 caracteres | ✅ DEF-03 |
+| F02 | DNI de la búsqueda avanzada           | 7 u 8 números al enviar                       | Numérico                         | Se pueden escribir letras y más de 8 caracteres | ✅ DEF-03 |
+| F03 | Nombre y descripción de especialidad  | 3 a 100 caracteres al enviar                  | Nombre 3–100, descripción 10–100 | Se pueden escribir más de 100 caracteres        | ✅ DEF-03 |
+| F04 | Nombre del médico                     | 3 a 100 caracteres al enviar                  | Hasta 100                        | Se pueden escribir más de 100 caracteres        | ✅ DEF-03 |
+| F05 | Matrícula del médico                  | Obligatoria, sin máximo                       | Obligatoria, sin máximo          | No tiene límite de largo                        | ✅ DEF-03 |
+| F06 | Motivo de la consulta                 | 5 a 500 caracteres al enviar                  | 5 a 500                          | Se pueden escribir más de 500 caracteres        | ✅ DEF-03 |
+| F07 | Correos de los logins                 | Formato de correo al enviar                   | Formato de correo                | Sin máximo de largo                             | ✅ DEF-03 |
+| F08 | Búsquedas de médicos y especialidades | Mínimo 3 caracteres; especialidades hasta 100 | Hasta 100                        | La búsqueda de médicos no tiene máximo          | ✅ DEF-03 |
 | F09 | Horarios de disponibilidad            | Tipo hora, intervalos de 30 minutos           | Intervalos de 30 minutos         | Correcto                                        | ✅        |
 | F10 | Fecha de la búsqueda avanzada         | Tipo fecha                                    | `YYYY-MM-DD`                     | Correcto                                        | ✅        |
 
@@ -115,11 +115,11 @@ Se revisa que cada campo limite lo que se puede escribir, no solo lo que se pued
 
 ## Defectos
 
-| ID     | Caso    | Descripción                                                                                                                                                                                     | Responsable | Tarjeta o PR | Estado      |
-| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------ | ----------- |
-| DEF-01 | D02     | El panel muestra "M?dicos activos": hay un `?` en lugar de la "é" en `src/modules/dashboard/pages/OverviewPage.jsx:97`, desde el commit `1fc77ca`                                               | Braian      | PR #51       | En revisión |
-| DEF-02 | B15     | Con el backend apagado se muestra "Ocurrió un error inesperado" en lugar de "No se pudo conectar con el servidor", porque el proxy de Vite responde 500. Severidad baja: hay botón "Reintentar" | Fernando    | F49          | Abierto     |
-| DEF-03 | F01–F08 | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | Braian      | PR #51       | En revisión |
+| ID     | Caso    | Descripción                                                                                                                                                                                     | Responsable | Tarjeta o PR | Estado  |
+| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------ | ------- |
+| DEF-01 | D02     | El panel muestra "M?dicos activos": hay un `?` en lugar de la "é" en `src/modules/dashboard/pages/OverviewPage.jsx:97`, desde el commit `1fc77ca`                                               | Braian      | PR #51       | Cerrado |
+| DEF-02 | B15     | Con el backend apagado se muestra "Ocurrió un error inesperado" en lugar de "No se pudo conectar con el servidor", porque el proxy de Vite responde 500. Severidad baja: hay botón "Reintentar" | Fernando    | F49          | Abierto |
+| DEF-03 | F01–F08 | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | Braian      | PR #51       | Cerrado |
 
 ## Cierre
 
