@@ -125,19 +125,39 @@ Las tarjetas actuales F01 y F02 (fixtures y store local) se archivan: los datos 
 | Página 30      | Errores y validaciones en la UI                 | F05, formularios, F35                 |
 | Página 30      | Uso de librerías                                | Reglas 4 y 9                          |
 
-| Mockup                           | Página | Tareas         |
-| -------------------------------- | ------ | -------------- |
-| Admin: login                     | 23     | F10            |
-| Admin: página principal          | 23     | F33, F34       |
-| Admin: listado de médicos        | 24     | F17, F20, F23  |
-| Admin: crear médico              | 24     | F18, F19       |
-| Admin: disponibilidad horaria    | 25     | F21, F22       |
-| Admin: listado de especialidades | 25     | F13, F16       |
-| Admin: crear especialidad        | 26     | F14, F15       |
-| Admin: búsqueda avanzada         | 27     | F31, F32       |
-| Paciente: login                  | 28     | F11            |
-| Paciente: turno                  | 28     | F24 a F27      |
-| Paciente: soporte móvil          | 29     | F24 a F27, F37 |
+Los mockups corresponden a la versión 1.4 del enunciado (18/11/2026). Las diferencias con la v1.7 y los flujos obligatorios están en [`docs/enunciado-17-nov.md`](../enunciado-17-nov.md).
+
+| Mockup                             | Página | Tareas              |
+| ---------------------------------- | ------ | ------------------- |
+| Admin: login                       | 21     | F10                 |
+| Admin: página principal            | 21     | F33, F34            |
+| Admin: listado de médicos          | 22     | F17, F20, F23       |
+| Admin: crear médico                | 22     | F18, F19            |
+| Admin: disponibilidad horaria      | 23     | F21, F22            |
+| Admin: listado de especialidades   | 23     | F13, F16            |
+| Admin: crear especialidad          | 24     | F14, F15            |
+| Admin: búsqueda avanzada           | 24     | F31, F32            |
+| Paciente: login                    | 25     | F11, F42            |
+| Paciente: reserva de turno         | 25     | F24 a F27, F43      |
+| Paciente: listado de turnos        | 26     | F28 a F30, F44      |
+| Paciente: móvil, reserva de turno  | 27     | F24 a F27, F37, F43 |
+| Paciente: móvil, listado de turnos | 28     | F28 a F30, F37, F44 |
+
+## Tarjetas agregadas después del plan
+
+Viven solo en Trello, sin archivo en esta carpeta.
+
+| ID  | Tarea                                                       | Responsable |
+| --- | ----------------------------------------------------------- | ----------- |
+| F42 | UI — Actualizar login del paciente al PDF recibido          | Braian      |
+| F43 | UI — Ajustar reserva a los mockups recibidos                | Braian      |
+| F44 | UI — Ajustar Mis turnos a los mockups recibidos             | Tobías      |
+| F45 | Análisis — Confirmar versión y diferencias del contrato API | Fernando    |
+| F46 | Corrección — Evitar que el resumen móvil tape los horarios  | Fernando    |
+| F47 | Corrección — Ocultar resultados de búsquedas inválidas      | Fernando    |
+| F48 | Corrección — Traducir los errores del panel                 | Fernando    |
+| F49 | Corrección — Conservar códigos de error en las bajas        | Fernando    |
+| F50 | Corrección — Dar nombre y estado al menú móvil del paciente | Tobías      |
 
 ## Particularidades del backend
 

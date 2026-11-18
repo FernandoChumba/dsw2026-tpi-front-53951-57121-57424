@@ -68,6 +68,6 @@ En `shared/helpers/formatDate.js`, `formatDate` presenta fechas `YYYY-MM-DD` con
 
 ## Mockups
 
-Las imágenes están en `docs/mockups/`. El índice y las decisiones sobre datos sin respaldo en el backend están en `docs/tasks/README.md`.
+Las imágenes están en `docs/mockups/` y corresponden a la versión 1.4 del enunciado (18/11/2026). Los cambios respecto de la v1.7 y los flujos obligatorios están en `docs/enunciado-17-nov.md`. El índice y las decisiones sobre datos sin respaldo en el backend están en `docs/tasks/README.md`.
 
 En `TablePagination`, el listado controla el índice desde cero y recibe el siguiente índice en `onPageChange`. Con cero registros, ambos botones quedan deshabilitados.
