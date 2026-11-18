@@ -23,7 +23,7 @@ function PatientHome() {
   } = useAvailableSlots();
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 pb-44 sm:pb-0">
+    <div className="mx-auto flex max-w-5xl flex-col gap-6">
       <BookingFilters
         specialties={specialties}
         doctors={doctors}
