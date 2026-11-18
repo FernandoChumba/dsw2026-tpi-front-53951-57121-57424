@@ -57,86 +57,99 @@ function PatientLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-med-bg">
-      {/* Barra superior con la marca, como en el mockup (sin enlaces: no hay
-          páginas de inicio, soporte ni ayuda). */}
-      <header className="border-b border-med-border bg-med-card px-4 py-4 sm:px-8">
-        <p className="text-xl font-bold text-med-primary-700">MedPortal</p>
-      </header>
-
-      <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md rounded-2xl border border-med-border bg-med-card p-6 shadow-lg sm:p-10">
-          <div className="mb-6 text-center">
-            <p className="text-2xl font-bold text-med-primary-700">MedPortal</p>
-            <h1 className="mt-3 text-2xl font-semibold text-med-text-main">
-              Acceso al Paciente
-            </h1>
-            <p className="mt-2 text-sm text-med-text-sub">
-              Ingresá tu correo y tu DNI para continuar.
-            </p>
-          </div>
-
-          <form
-            noValidate
-            onSubmit={handleSubmit(onValid)}
-            className="flex flex-col gap-4"
+    <div className="flex min-h-screen flex-col items-center justify-center bg-med-primary-950 px-4 py-8">
+      <div className="mb-8 flex flex-col items-center">
+        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-med-card shadow-lg">
+          <svg
+            className="h-8 w-8 text-med-primary-900"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
           >
-            <Input
-              label="Correo Electrónico"
-              type="email"
-              autoComplete="email"
-              placeholder="ejemplo@correo.com"
-              error={errors.email?.message}
-              {...register('email', {
-                required: 'Ingresá tu correo electrónico.',
-                pattern: {
-                  value: EMAIL_PATTERN,
-                  message: 'Ingresá un correo electrónico válido.',
-                },
-              })}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
             />
-
-            {/* type="text" con inputMode numérico: muestra el teclado de
-                números en el celular sin perder los ceros a la izquierda. */}
-            <Input
-              label="DNI / Número de Identificación"
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              placeholder="Número de documento"
-              error={errors.dni?.message}
-              {...register('dni', {
-                required: 'Ingresá tu DNI.',
-                pattern: {
-                  value: DNI_PATTERN,
-                  message: 'El DNI debe tener 7 u 8 números, sin puntos.',
-                },
-              })}
-            />
-
-            {errorMessage && (
-              <FormMessage type="error">{errorMessage}</FormMessage>
-            )}
-
-            <Button
-              type="submit"
-              className="mt-1 min-h-11 w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Ingresando…' : 'Ingresar al Portal Médico →'}
-            </Button>
-          </form>
-
-          <div className="mt-6 border-t border-med-border pt-4 text-center">
-            <Link
-              to="/admin/login"
-              className="text-sm font-medium text-med-primary-700 hover:underline"
-            >
-              ¿Sos personal administrativo? Ingresá acá
-            </Link>
-          </div>
+          </svg>
         </div>
-      </main>
+        <p className="text-3xl font-semibold tracking-tight text-med-card">
+          MedPortal
+        </p>
+      </div>
+
+      <div className="w-full max-w-md rounded-2xl bg-med-card p-6 shadow-2xl sm:p-10">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-med-primary-900">
+            Portal del Paciente
+          </h1>
+          <p className="mt-1 text-sm leading-relaxed text-med-text-sub">
+            Iniciá sesión para reservar y consultar tus turnos médicos.
+          </p>
+        </div>
+
+        <form
+          noValidate
+          onSubmit={handleSubmit(onValid)}
+          className="flex flex-col gap-4"
+        >
+          <Input
+            label="Correo Electrónico"
+            type="email"
+            autoComplete="email"
+            placeholder="paciente@ejemplo.com"
+            error={errors.email?.message}
+            {...register('email', {
+              required: 'Ingresá tu correo electrónico.',
+              pattern: {
+                value: EMAIL_PATTERN,
+                message: 'Ingresá un correo electrónico válido.',
+              },
+            })}
+          />
+
+          {/* type="text" con inputMode numérico: muestra el teclado de
+              números en el celular sin perder los ceros a la izquierda. */}
+          <Input
+            label="DNI"
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="Número de documento"
+            error={errors.dni?.message}
+            {...register('dni', {
+              required: 'Ingresá tu DNI.',
+              pattern: {
+                value: DNI_PATTERN,
+                message: 'El DNI debe tener 7 u 8 números, sin puntos.',
+              },
+            })}
+          />
+
+          {errorMessage && (
+            <FormMessage type="error">{errorMessage}</FormMessage>
+          )}
+
+          <Button
+            type="submit"
+            className="mt-2 min-h-11 w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Ingresando…' : 'Ingresar Paciente'}
+          </Button>
+        </form>
+      </div>
+
+      <div className="mt-6 text-center">
+        <Link
+          to="/admin/login"
+          className="text-xs text-med-primary-200 transition hover:text-med-card"
+        >
+          ¿Sos personal administrativo o médico? Ingresá acá →
+        </Link>
+      </div>
     </div>
   );
 }
