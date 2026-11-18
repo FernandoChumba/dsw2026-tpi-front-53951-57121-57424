@@ -17,6 +17,7 @@ import {
   getShortMonth,
   getToday,
   getWeekDays,
+  isWeekend,
 } from './dates';
 
 // Agrupa los bloques por fecha: { '2026-11-10': [bloque, bloque], ... }
@@ -51,6 +52,8 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
     useCreateAppointment();
   const sortedSlots = sortSlots(slots);
   const slotsByDate = groupByDate(sortedSlots);
+  const showWeekend = sortedSlots.some((slot) => isWeekend(slot.date));
+  const daysPerWeek = showWeekend ? 7 : 5;
 
   // Límites de la navegación: no se puede ir antes de la semana actual ni
   // después de la semana del último bloque.
@@ -72,13 +75,13 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
     sortedSlots.length > 0 ? sortedSlots[0].date : firstMonday
   );
 
-  const weekDays = getWeekDays(monday);
+  const weekDays = getWeekDays(monday, daysPerWeek);
 
   // Al cambiar de semana, en el celular se abre el primer día con bloques.
   function goToWeek(newMonday) {
     setMonday(newMonday);
 
-    const newWeek = getWeekDays(newMonday);
+    const newWeek = getWeekDays(newMonday, daysPerWeek);
     const firstDayWithSlots = newWeek.find((day) => slotsByDate[day]);
 
     setMobileDate(firstDayWithSlots ?? newMonday);
@@ -140,7 +143,7 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
               ‹
             </button>
             <span className="text-sm font-bold text-med-primary-900 sm:text-base">
-              {formatWeekLabel(monday)}
+              {formatWeekLabel(weekDays)}
             </span>
             <button
               type="button"
@@ -166,7 +169,11 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
         </div>
 
         {/* Escritorio: una columna por día */}
-        <div className="hidden gap-2 pt-5 sm:grid sm:grid-cols-7">
+        <div
+          className={`hidden gap-2 pt-5 sm:grid ${
+            showWeekend ? 'sm:grid-cols-7' : 'sm:grid-cols-5'
+          }`}
+        >
           {weekDays.map((day) => {
             const daySlots = slotsByDate[day] ?? [];
 
@@ -186,7 +193,7 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
                     daySlots.map((slot) => renderSlotButton(slot))
                   ) : (
                     <p className="px-1 py-6 text-center text-xs text-med-text-muted">
-                      Sin disponibilidad
+                      No hay turnos disponibles para este día.
                     </p>
                   )}
                 </div>
@@ -197,6 +204,9 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
 
         {/* Celular: fila de días y horarios del día elegido */}
         <div className="space-y-4 pt-4 sm:hidden">
+          <span className="block text-xs font-bold text-med-primary-900">
+            Próximos Turnos
+          </span>
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {weekDays.map((day) => {
               const isActive = mobileDate === day;
@@ -237,7 +247,7 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
               </div>
             ) : (
               <p className="rounded-xl border border-med-border bg-med-bg p-6 text-center text-xs text-med-text-muted">
-                Sin disponibilidad
+                No hay turnos disponibles para este día.
               </p>
             )}
           </div>

@@ -62,15 +62,21 @@ export function getMonday(isoDate) {
   return addDays(isoDate, -daysSinceMonday);
 }
 
-// Los 7 días de la semana que empieza en ese lunes.
-export function getWeekDays(monday) {
+// Los días de la semana que empieza en ese lunes: 7 por defecto, 5 sin el fin de semana.
+export function getWeekDays(monday, length = 7) {
   const days = [];
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < length; i++) {
     days.push(addDays(monday, i));
   }
 
   return days;
+}
+
+export function isWeekend(isoDate) {
+  const dayOfWeek = toDate(isoDate).getUTCDay();
+
+  return dayOfWeek === 0 || dayOfWeek === 6;
 }
 
 // 'LUN', 'MAR', ...
@@ -97,11 +103,12 @@ export function formatLongDate(isoDate) {
   } de ${date.getUTCFullYear()}`;
 }
 
-// Título de la semana: 'Lunes 3 - Domingo 9, Noviembre'.
-export function formatWeekLabel(monday) {
-  const sunday = addDays(monday, 6);
+// Título de la semana: 'Lunes 3 - Viernes 7, Noviembre'.
+export function formatWeekLabel(weekDays) {
+  const first = toDate(weekDays[0]);
+  const last = toDate(weekDays[weekDays.length - 1]);
 
-  return `Lunes ${getDayNumber(monday)} - Domingo ${getDayNumber(sunday)}, ${
-    MONTH_NAMES[toDate(sunday).getUTCMonth()]
-  }`;
+  return `${DAY_NAMES_LONG[first.getUTCDay()]} ${first.getUTCDate()} - ${
+    DAY_NAMES_LONG[last.getUTCDay()]
+  } ${last.getUTCDate()}, ${MONTH_NAMES[last.getUTCMonth()]}`;
 }

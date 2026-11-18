@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import BookingFilters from '../components/booking/BookingFilters';
 import DoctorSummary from '../components/booking/DoctorSummary';
 import SlotPicker from '../components/booking/SlotPicker';
@@ -21,6 +22,9 @@ function PatientHome() {
     changeDoctor,
     reload,
   } = useAvailableSlots();
+  const [searchedDoctorId, setSearchedDoctorId] = useState('');
+  const showAvailability =
+    selectedDoctor && searchedDoctorId === selectedDoctor.id;
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -34,13 +38,14 @@ function PatientHome() {
         hasSlots={hasSlots}
         onSpecialtyChange={changeSpecialty}
         onDoctorChange={changeDoctor}
+        onSearch={() => setSearchedDoctorId(doctorId)}
         onRetry={reload}
       />
 
-      {/* El resto aparece recién cuando hay un médico elegido. La key hace que
+      {/* El resto aparece al buscar la disponibilidad del médico elegido. La key hace que
           el calendario arranque de cero al cambiar de médico, así no queda
           seleccionado un horario del médico anterior. */}
-      {selectedDoctor && (
+      {showAvailability && (
         <>
           <DoctorSummary
             doctor={selectedDoctor}
