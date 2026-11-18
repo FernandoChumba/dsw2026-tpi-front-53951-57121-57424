@@ -16,6 +16,7 @@ export default function BookingFilters({
   hasSlots,
   onSpecialtyChange,
   onDoctorChange,
+  onSearch,
   onRetry,
 }) {
   function renderContent() {
@@ -44,9 +45,9 @@ export default function BookingFilters({
     }
 
     return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_auto] md:items-end">
         <Select
-          label="Especialidad"
+          label="Seleccionar Especialidad"
           value={specialtyId}
           onChange={(event) => onSpecialtyChange(event.target.value)}
         >
@@ -60,7 +61,7 @@ export default function BookingFilters({
 
         {/* El médico se habilita recién cuando hay especialidad elegida. */}
         <Select
-          label="Médico"
+          label="Seleccionar Médico"
           value={doctorId}
           disabled={!specialtyId}
           onChange={(event) => onDoctorChange(event.target.value)}
@@ -72,6 +73,27 @@ export default function BookingFilters({
             </option>
           ))}
         </Select>
+
+        <Button
+          disabled={!doctorId}
+          onClick={onSearch}
+          className="inline-flex min-h-11 items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          Buscar Disponibilidad
+        </Button>
       </div>
     );
   }
