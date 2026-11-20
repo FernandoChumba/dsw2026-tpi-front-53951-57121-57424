@@ -83,10 +83,14 @@ function PatientLayout() {
             {/* Botón hamburguesa móvil */}
             <button
               type="button"
+              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="patient-mobile-menu"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1.5 rounded-lg border border-med-border text-med-text-sub hover:bg-gray-50"
+              className="md:hidden p-1.5 rounded-lg border border-med-border text-med-text-sub hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-med-primary-600"
             >
               <svg
+                aria-hidden="true"
                 className="w-5 h-5"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -104,48 +108,50 @@ function PatientLayout() {
         </div>
 
         {/* Desplegable móvil */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-med-border px-4 py-3 bg-white space-y-2">
-            <NavLink
-              to="/"
-              end
-              onClick={() => setMobileMenuOpen(false)}
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-lg text-sm font-semibold transition ${
-                  isActive
-                    ? 'bg-med-primary-900 text-white'
-                    : 'text-med-text-sub hover:bg-med-primary-50'
-                }`
-              }
+        <div
+          id="patient-mobile-menu"
+          hidden={!mobileMenuOpen}
+          className="md:hidden border-t border-med-border px-4 py-3 bg-white space-y-2"
+        >
+          <NavLink
+            to="/"
+            end
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) =>
+              `block px-3 py-2 rounded-lg text-sm font-semibold transition ${
+                isActive
+                  ? 'bg-med-primary-900 text-white'
+                  : 'text-med-text-sub hover:bg-med-primary-50'
+              }`
+            }
+          >
+            Reservar Turno
+          </NavLink>
+          <NavLink
+            to="/appointments"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) =>
+              `block px-3 py-2 rounded-lg text-sm font-semibold transition ${
+                isActive
+                  ? 'bg-med-primary-900 text-white'
+                  : 'text-med-text-sub hover:bg-med-primary-50'
+              }`
+            }
+          >
+            Mis Turnos
+          </NavLink>
+          <div className="pt-2 border-t border-med-border-subtle flex items-center justify-between">
+            <span className="text-xs font-medium text-med-text-sub">
+              Paciente: {email}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="text-xs font-bold text-red-600"
             >
-              Reservar Turno
-            </NavLink>
-            <NavLink
-              to="/appointments"
-              onClick={() => setMobileMenuOpen(false)}
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-lg text-sm font-semibold transition ${
-                  isActive
-                    ? 'bg-med-primary-900 text-white'
-                    : 'text-med-text-sub hover:bg-med-primary-50'
-                }`
-              }
-            >
-              Mis Turnos
-            </NavLink>
-            <div className="pt-2 border-t border-med-border-subtle flex items-center justify-between">
-              <span className="text-xs font-medium text-med-text-sub">
-                Paciente: {email}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="text-xs font-bold text-red-600"
-              >
-                Cerrar sesión
-              </button>
-            </div>
+              Cerrar sesión
+            </button>
           </div>
-        )}
+        </div>
       </header>
 
       {/* Main Content */}

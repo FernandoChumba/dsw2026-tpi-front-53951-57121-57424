@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { getApiError } from '../helpers/apiError';
 import Button from './Button';
 import FormMessage from './FormMessage';
 import Modal from './Modal';
@@ -14,20 +15,24 @@ function Confirmation({
 }) {
   const pending = useRef(false);
   const [isPending, setIsPending] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleConfirm() {
     if (pending.current) return;
 
     pending.current = true;
     setIsPending(true);
-    setHasError(false);
+    setErrorMessage('');
 
     try {
       await onConfirm();
       onClose();
-    } catch {
-      setHasError(true);
+    } catch (error) {
+      setErrorMessage(
+        error?.isAxiosError
+          ? getApiError(error).message
+          : 'No se pudo completar la acción. Volvé a intentar.'
+      );
     } finally {
       pending.current = false;
       setIsPending(false);
@@ -44,11 +49,7 @@ function Confirmation({
         {description && (
           <p className="text-sm text-med-text-sub">{description}</p>
         )}
-        {hasError && (
-          <FormMessage type="error">
-            No se pudo completar la acción. Volvé a intentar.
-          </FormMessage>
-        )}
+        {errorMessage && <FormMessage type="error">{errorMessage}</FormMessage>}
         <div className="flex flex-wrap justify-end gap-2">
           <Button variant="outline" disabled={isPending} onClick={handleClose}>
             {cancelLabel}
