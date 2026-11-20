@@ -29,7 +29,7 @@ function actionColumn(onRemove) {
           Editar
         </Link>
         <Button
-          variant="outline"
+          variant="danger"
           className="min-h-9 px-2 py-1 text-xs"
           aria-label={`Eliminar ${specialty.name}`}
           onClick={() => onRemove(specialty)}

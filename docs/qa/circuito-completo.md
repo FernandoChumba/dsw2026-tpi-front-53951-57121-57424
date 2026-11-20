@@ -80,7 +80,7 @@ Comparar con `docs/mockups/`. Paciente a 1366, 390 y 360 px; administración a 1
 | D03 | Admin: listado de médicos        | `p22-admin-medicos-listado.png`                                    | 1366, 700      | ⚠️ OBS-03 |
 | D04 | Admin: crear médico              | `p22-admin-medicos-crear.png`                                      | 1366, 700      | ✅        |
 | D05 | Admin: disponibilidad horaria    | `p23-admin-disponibilidad.png`                                     | 1366, 700      | ✅        |
-| D06 | Admin: listado de especialidades | `p23-admin-especialidades-listado.png`                             | 1366, 700      | ⚠️ OBS-04 |
+| D06 | Admin: listado de especialidades | `p23-admin-especialidades-listado.png`                             | 1366, 700      | ✅ OBS-04 |
 | D07 | Admin: crear especialidad        | `p24-admin-especialidades-crear.png`                               | 1366, 700      | ✅        |
 | D08 | Admin: búsqueda avanzada         | `p24-admin-busqueda.png`                                           | 1366, 700      | ⚠️ OBS-03 |
 | D09 | Paciente: login                  | `p25-paciente-login.png`                                           | 1366, 390, 360 | ✅        |
@@ -127,13 +127,13 @@ Se revisa que cada campo limite lo que se puede escribir, no solo lo que se pued
 
 No son defectos: el flujo funciona. Quedan registradas por si el equipo decide ajustarlas.
 
-| ID     | Caso     | Observación                                                                                                                                                                                     |
-| ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OBS-01 | B14      | La reserva abre en la primera semana con turnos. Si es la siguiente, la flecha permite volver a la semana actual, que muestra "No hay turnos disponibles", y ahí queda deshabilitada            |
-| OBS-02 | A07      | El modal "Turno confirmado" no se cierra con Escape ni con "Cerrar", que aparece deshabilitado: la única salida es "Ir a Mis turnos" (`dismissible={false}` en `SlotPicker.jsx`)                |
-| OBS-03 | D03, D08 | A 700 px las tablas se desplazan de costado dentro de su recuadro; "Acciones" y "Estado" quedan fuera de vista hasta desplazar                                                                  |
-| OBS-04 | D06      | El mockup de la 1.4 muestra en rojo la acción de eliminar especialidades; en la pantalla el botón "Eliminar" usa el estilo contorno, a diferencia del listado de médicos, donde ya está en rojo |
-| DEF-03 | F01–F08  | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | Braian | PR #51 | Cerrado |
+| ID     | Caso     | Observación                                                                                                                                                                                                            |
+| ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OBS-01 | B14      | La reserva abre en la primera semana con turnos. Si es la siguiente, la flecha permite volver a la semana actual, que muestra "No hay turnos disponibles", y ahí queda deshabilitada                                   |
+| OBS-02 | A07      | El modal "Turno confirmado" no se cierra con Escape ni con "Cerrar", que aparece deshabilitado: la única salida es "Ir a Mis turnos" (`dismissible={false}` en `SlotPicker.jsx`)                                       |
+| OBS-03 | D03, D08 | A 700 px las tablas se desplazan de costado dentro de su recuadro; "Acciones" y "Estado" quedan fuera de vista hasta desplazar                                                                                         |
+| OBS-04 | D06      | El mockup de la 1.4 muestra en rojo la acción de eliminar especialidades; en la pantalla el botón "Eliminar" usa el estilo contorno, a diferencia del listado de médicos, donde ya está en rojo. Resuelta en el PR #57 |
+| DEF-03 | F01–F08  | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                                                      | Braian | PR #51 | Cerrado |
 
 ## Cierre
 
