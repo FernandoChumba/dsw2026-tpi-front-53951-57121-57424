@@ -35,11 +35,25 @@ const normalizeField = (field) => {
 // - code: el errorCode del backend (o null si no hubo respuesta).
 // - message: el mensaje para mostrar al usuario.
 // - details: lista de { field, issue } con el campo ya normalizado.
+function parseData(data) {
+  if (typeof data !== 'string') return data;
+
+  try {
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
 export function getApiError(error) {
-  const data = error?.response?.data;
+  const data = parseData(error?.response?.data);
 
   // Sin respuesta: el servidor no está levantado o no hay conexión.
   if (!error?.response) {
+    return { code: null, message: NETWORK_ERROR_MESSAGE, details: [] };
+  }
+
+  if (error.response.status >= 500 && !data?.errorCode) {
     return { code: null, message: NETWORK_ERROR_MESSAGE, details: [] };
   }
 
