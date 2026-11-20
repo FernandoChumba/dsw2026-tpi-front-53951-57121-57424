@@ -19,6 +19,7 @@ Prueba del frontend integrado con el backend real, sobre `development` actualiza
 | Fecha      | Commit de `development` | Quién  | Resultado general                                                                                                                                             |
 | ---------- | ----------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 18/11/2026 | `2648f66`               | Braian | Parcial, con flujo automatizado sobre base vacía: circuito principal y casos de error completos. Pendiente la validación final después de F44, F45, F49 y F50 |
+| 20/11/2026 | `825c0ef`               | Braian | Final, con flujo automatizado sobre base vacía y backend `2dc291d`: A, B, C y D completos sin ❌. Observaciones menores en B14, D y la tabla de abajo         |
 
 ## A. Circuito principal
 
@@ -57,8 +58,8 @@ Orden pedido por la tarea: administrador → especialidad → médico → dispon
 | B11 | Doble confirmación         | Hacer doble clic rápido en "Confirmar Turno"                                               | Se crea un solo turno                                                                                                  | ✅        |
 | B12 | Conflicto de reserva       | Dos pacientes en navegadores distintos eligen el mismo horario y confirman                 | El segundo ve el modal "Horario no disponible" y puede actualizar los horarios                                         | ✅        |
 | B13 | Sesión vencida             | Con sesión iniciada, alterar el token guardado en el navegador y navegar                   | Se borra la sesión y vuelve al login del área                                                                          | ✅        |
-| B14 | Reservas en el pasado      | En la reserva, intentar ir a una semana anterior a la actual                               | La flecha está deshabilitada y no se muestran horarios pasados                                                         | ✅        |
-| B15 | Servidor caído             | Detener el backend y recargar una pantalla con datos                                       | "No se pudo conectar con el servidor. Revisá tu conexión." y, donde corresponde, botón "Reintentar"                    | ⚠️ DEF-02 |
+| B14 | Reservas en el pasado      | En la reserva, intentar ir a una semana anterior a la actual                               | La flecha está deshabilitada y no se muestran horarios pasados                                                         | ✅ OBS-01 |
+| B15 | Servidor caído             | Detener el backend y recargar una pantalla con datos                                       | "No se pudo conectar con el servidor. Revisá tu conexión." y, donde corresponde, botón "Reintentar"                    | ✅ DEF-02 |
 
 ## C. Flujos obligatorios de la versión 1.4
 
@@ -74,19 +75,21 @@ Comparar con `docs/mockups/`. Paciente a 1366, 390 y 360 px; administración a 1
 
 | ID  | Pantalla                         | Mockup                                                             | Anchos         | Resultado |
 | --- | -------------------------------- | ------------------------------------------------------------------ | -------------- | --------- |
-| D01 | Admin: login                     | `p21-admin-login.png`                                              | 1366, 700      | ⏳        |
+| D01 | Admin: login                     | `p21-admin-login.png`                                              | 1366, 700      | ✅        |
 | D02 | Admin: página principal          | `p21-admin-principal.png`                                          | 1366, 700      | ✅ DEF-01 |
-| D03 | Admin: listado de médicos        | `p22-admin-medicos-listado.png`                                    | 1366, 700      | ⏳        |
-| D04 | Admin: crear médico              | `p22-admin-medicos-crear.png`                                      | 1366, 700      | ⏳        |
-| D05 | Admin: disponibilidad horaria    | `p23-admin-disponibilidad.png`                                     | 1366, 700      | ⏳        |
-| D06 | Admin: listado de especialidades | `p23-admin-especialidades-listado.png`                             | 1366, 700      | ⏳        |
-| D07 | Admin: crear especialidad        | `p24-admin-especialidades-crear.png`                               | 1366, 700      | ⏳        |
-| D08 | Admin: búsqueda avanzada         | `p24-admin-busqueda.png`                                           | 1366, 700      | ⏳        |
-| D09 | Paciente: login                  | `p25-paciente-login.png`                                           | 1366, 390, 360 | ⏳        |
-| D10 | Paciente: reserva                | `p25-paciente-reserva.png`, `p27-paciente-movil-reserva.png`       | 1366, 390, 360 | ⏳        |
-| D11 | Paciente: Mis turnos             | `p26-paciente-mis-turnos.png`, `p28-paciente-movil-mis-turnos.png` | 1366, 390, 360 | ⏳        |
+| D03 | Admin: listado de médicos        | `p22-admin-medicos-listado.png`                                    | 1366, 700      | ⚠️ OBS-03 |
+| D04 | Admin: crear médico              | `p22-admin-medicos-crear.png`                                      | 1366, 700      | ✅        |
+| D05 | Admin: disponibilidad horaria    | `p23-admin-disponibilidad.png`                                     | 1366, 700      | ✅        |
+| D06 | Admin: listado de especialidades | `p23-admin-especialidades-listado.png`                             | 1366, 700      | ⚠️ OBS-04 |
+| D07 | Admin: crear especialidad        | `p24-admin-especialidades-crear.png`                               | 1366, 700      | ✅        |
+| D08 | Admin: búsqueda avanzada         | `p24-admin-busqueda.png`                                           | 1366, 700      | ⚠️ OBS-03 |
+| D09 | Paciente: login                  | `p25-paciente-login.png`                                           | 1366, 390, 360 | ✅        |
+| D10 | Paciente: reserva                | `p25-paciente-reserva.png`, `p27-paciente-movil-reserva.png`       | 1366, 390, 360 | ✅        |
+| D11 | Paciente: Mis turnos             | `p26-paciente-mis-turnos.png`, `p28-paciente-movil-mis-turnos.png` | 1366, 390, 360 | ✅        |
 
 En cada pantalla revisar también el uso con teclado: orden del foco, foco visible y cierre de modales con Escape.
+
+Ejecución del 20/11: ninguna pantalla tiene scroll horizontal en los anchos indicados. Escape cierra el diálogo de confirmación; el modal "Turno confirmado" no se cierra a propósito (OBS-02). El menú móvil del paciente tiene nombre, estado y foco visible desde F50. Las diferencias de contenido sin respaldo en el backend (estado de médicos y especialidades, avatares, clínica, "Estado inicial") y el recuadro de credenciales de prueba se omiten según las decisiones del equipo en `docs/enunciado-17-nov.md`.
 
 ## F. Validación de inputs
 
@@ -115,16 +118,27 @@ Se revisa que cada campo limite lo que se puede escribir, no solo lo que se pued
 
 ## Defectos
 
-| ID     | Caso    | Descripción                                                                                                                                                                                     | Responsable | Tarjeta o PR | Estado  |
-| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------ | ------- |
-| DEF-01 | D02     | El panel muestra "M?dicos activos": hay un `?` en lugar de la "é" en `src/modules/dashboard/pages/OverviewPage.jsx:97`, desde el commit `1fc77ca`                                               | Braian      | PR #51       | Cerrado |
-| DEF-02 | B15     | Con el backend apagado se muestra "Ocurrió un error inesperado" en lugar de "No se pudo conectar con el servidor", porque el proxy de Vite responde 500. Severidad baja: hay botón "Reintentar" | Fernando    | F49          | Abierto |
-| DEF-03 | F01–F08 | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | Braian      | PR #51       | Cerrado |
+| ID     | Caso | Descripción                                                                                                                                                                                     | Responsable | Tarjeta o PR | Estado  |
+| ------ | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------ | ------- |
+| DEF-01 | D02  | El panel muestra "M?dicos activos": hay un `?` en lugar de la "é" en `src/modules/dashboard/pages/OverviewPage.jsx:97`, desde el commit `1fc77ca`                                               | Braian      | PR #51       | Cerrado |
+| DEF-02 | B15  | Con el backend apagado se muestra "Ocurrió un error inesperado" en lugar de "No se pudo conectar con el servidor", porque el proxy de Vite responde 500. Severidad baja: hay botón "Reintentar" | Braian      | PR #53 (F49) | Cerrado |
+
+## Observaciones
+
+No son defectos: el flujo funciona. Quedan registradas por si el equipo decide ajustarlas.
+
+| ID     | Caso     | Observación                                                                                                                                                                                     |
+| ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OBS-01 | B14      | La reserva abre en la primera semana con turnos. Si es la siguiente, la flecha permite volver a la semana actual, que muestra "No hay turnos disponibles", y ahí queda deshabilitada            |
+| OBS-02 | A07      | El modal "Turno confirmado" no se cierra con Escape ni con "Cerrar", que aparece deshabilitado: la única salida es "Ir a Mis turnos" (`dismissible={false}` en `SlotPicker.jsx`)                |
+| OBS-03 | D03, D08 | A 700 px las tablas se desplazan de costado dentro de su recuadro; "Acciones" y "Estado" quedan fuera de vista hasta desplazar                                                                  |
+| OBS-04 | D06      | El mockup de la 1.4 muestra en rojo la acción de eliminar especialidades; en la pantalla el botón "Eliminar" usa el estilo contorno, a diferencia del listado de médicos, donde ya está en rojo |
+| DEF-03 | F01–F08  | Los campos validan el largo y el formato al enviar, pero permiten escribir sin límite y aceptan letras en los DNI                                                                               | Braian | PR #51 | Cerrado |
 
 ## Cierre
 
-- [ ] Circuito principal completo sin ❌.
-- [ ] Casos de error completos sin ❌.
-- [ ] Ningún defecto sin responsable.
-- [ ] Circuito repetido sobre `development` actualizada después de las correcciones.
-- [ ] En el backend, `development` pasado a `main` por PR.
+- [x] Circuito principal completo sin ❌.
+- [x] Casos de error completos sin ❌.
+- [x] Ningún defecto sin responsable.
+- [x] Circuito repetido sobre `development` actualizada después de las correcciones.
+- [ ] En el backend, `development` pasado a `main` por PR. Pendiente de decidir con el equipo.
