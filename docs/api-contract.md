@@ -2,7 +2,7 @@
 
 Qué endpoints puede usar el frontend y qué particularidades tienen. Fuente: rama `development` de [`BraianMedrano/dsw2026-tpi`](https://github.com/BraianMedrano/dsw2026-tpi).
 
-> **Importante:** F03 cambia parte de este contrato. Los puntos afectados están en [Cambios pendientes](#cambios-pendientes-de-f03). Si el código del backend y este documento no coinciden, manda el backend: avisar al equipo y corregir este archivo.
+> **Versión vigente:** enunciado v1.7 y backend `development` en `2dc291d`, que ya incluye F03. Comprobado contra Swagger y la API local el 20/11/2026. El PDF del 17/11 no cambia este contrato: ver [Diferencias con el enunciado](#diferencias-con-el-enunciado). Si el código del backend y este documento no coinciden, manda el backend: avisar al equipo y corregir este archivo.
 
 ## Lo que más se confunde
 
@@ -43,14 +43,15 @@ Validación: `name` de 3 a 100 caracteres y `description` de 10 a 100.
 
 ## Médicos (Administrador)
 
-| Endpoint                   | Entrada                                 | Respuesta                                                              |
-| -------------------------- | --------------------------------------- | ---------------------------------------------------------------------- |
-| `GET /api/doctors`         | Query: `pageIndex`, `pageSize`, `name`  | 200 paginado de `{ id, name, licenseNumber, specialty: { id, name } }` |
-| `POST /api/doctors`        | `{ name, licenseNumber, specialityId }` | 201 con el elemento                                                    |
-| `PUT /api/doctors/{id}`    | `{ name, licenseNumber, specialityId }` | 200 con el elemento                                                    |
-| `DELETE /api/doctors/{id}` | —                                       | 200 con texto `ok`                                                     |
+| Endpoint                   | Entrada                                | Respuesta                                                              |
+| -------------------------- | -------------------------------------- | ---------------------------------------------------------------------- |
+| `GET /api/doctors`         | Query: `pageIndex`, `pageSize`, `name` | 200 paginado de `{ id, name, licenseNumber, specialty: { id, name } }` |
+| `GET /api/doctors/{id}`    | —                                      | 200 con el elemento                                                    |
+| `POST /api/doctors`        | `{ name, licenseNumber, specialtyId }` | 201 con el elemento                                                    |
+| `PUT /api/doctors/{id}`    | `{ name, licenseNumber, specialtyId }` | 200 con el elemento                                                    |
+| `DELETE /api/doctors/{id}` | —                                      | 200 con texto `ok`                                                     |
 
-Validación: `name` de 3 a 100 caracteres; `licenseNumber` y `specialityId` obligatorios.
+Validación: `name` de 3 a 100 caracteres; `licenseNumber` y `specialtyId` obligatorios. El nombre viejo `specialityId` ya no se acepta: responde 400 `VALIDATION_ERROR` en `SpecialtyId`.
 
 ## Disponibilidad
 
@@ -100,7 +101,10 @@ Validación: `name` de 3 a 100 caracteres; `licenseNumber` y `specialityId` obli
     "doctorId": "guid",
     "name": "texto",
     "specialty": { "specialtyId": "guid", "name": "texto" }
-  }
+  },
+  "date": "YYYY-MM-DD",
+  "startTime": "HH:mm:ss",
+  "endTime": "HH:mm:ss"
 }
 ```
 
@@ -171,13 +175,19 @@ Formato: `{ errorCode, message, details: [{ field, issue }] }`. `details` puede 
 
 F04 deja la guía completa en `docs/dev-setup.md`.
 
-## Cambios pendientes de F03
+## Diferencias con el enunciado
 
-Hasta que F03 esté en `development`, vale lo documentado arriba. Cuando se integre, actualizar este archivo.
+El PDF del 17/11 (versiones 1.3 y 1.4 del profesor) tomó el texto de una copia anterior a la v1.7. El equipo decidió no aplicar sus diferencias de contrato: valen la v1.7 y el backend. Detalle en [`docs/enunciado-17-nov.md`](enunciado-17-nov.md).
 
-| Hoy                                        | Después de F03                                                |
-| ------------------------------------------ | ------------------------------------------------------------- |
-| Médicos reciben `specialityId`             | Reciben `specialtyId`, como dice el enunciado                 |
-| No existe `GET /api/doctors/{id}`          | Existe para Administrador                                     |
-| La búsqueda no trae fecha ni horario       | Agrega `date`, `startTime` y `endTime`                        |
-| `UseCors` corre después de la autorización | Corre antes, y permite `http://localhost:5173` en Development |
+| PDF del 17/11                                           | Contrato vigente                                                   |
+| ------------------------------------------------------- | ------------------------------------------------------------------ |
+| Especialidades, médicos y búsqueda sin paginación       | Paginados con `pageIndex` y `pageSize`                             |
+| `specialtyId` con ejemplo numérico                      | `specialtyId` es GUID, como todos los IDs                          |
+| Contratos de médicos sin `licenseNumber`                | `licenseNumber` obligatorio, como en el mockup                     |
+| `availabilityId` en la reserva                          | `availabilitySlotId`                                               |
+| Sin respuestas de `POST`, `PUT` y `DELETE`              | `POST` y `PUT` devuelven la entidad; `DELETE` devuelve el texto ok |
+| Sin límites por minuto ni feriados                      | Hay límites por minuto y los bloques saltean feriados              |
+| La disponibilidad sobrescribe "todo el mes"             | Cubre el resto del mes actual                                      |
+| Login de administrador con "DNI" en el mockup de la 1.4 | `{ email, password }`; consulta abierta con el profesor            |
+
+Si el profesor confirma un cambio funcional, se abre una tarjeta nueva con el endpoint, los archivos y los criterios afectados.
