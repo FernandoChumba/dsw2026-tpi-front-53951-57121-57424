@@ -58,6 +58,7 @@ export default function DoctorAvailabilityPage() {
         {selectedDoctor && result && !result.error && (
           <AvailabilityForm
             key={doctorId}
+            doctorId={doctorId}
             initialAvailability={result.availability}
             onCancel={() => navigate('/admin/doctors')}
           />

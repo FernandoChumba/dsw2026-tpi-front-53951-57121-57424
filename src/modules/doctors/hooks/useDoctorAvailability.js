@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getApiError } from '../../shared/helpers/apiError';
 import { getDoctorAvailability } from '../services/getDoctorAvailability';
 import { getDoctors } from '../services/getDoctors';
-import { saveDoctorAvailability } from '../services/saveDoctorAvailability';
 
 // Trae todos los médicos para el selector.
 // El backend devuelve como máximo 100 por página, así que se piden las páginas
@@ -25,48 +24,7 @@ async function getAllDoctors() {
 
 // Estado de la pantalla de disponibilidad: la lista de médicos para el
 // selector y la disponibilidad del médico elegido (doctorId viene de la URL).
-export default function useDoctorAvailability(
-  doctorId,
-  { saveOnly = false, initialAvailability = [] } = {}
-) {
-  const hasAvailability = useRef(initialAvailability.length > 0);
-  const [saveState, setSaveState] = useState({
-    saving: false,
-    error: '',
-    saved: false,
-  });
-  const pending = useRef(false);
-
-  async function saveAvailability(days) {
-    if (pending.current) return;
-
-    if (!doctorId) {
-      setSaveState({
-        saving: false,
-        error: 'Seleccioná un médico.',
-        saved: false,
-      });
-
-      return;
-    }
-
-    pending.current = true;
-    setSaveState({ saving: true, error: '', saved: false });
-    try {
-      await saveDoctorAvailability({ doctorId, days }, hasAvailability.current);
-      hasAvailability.current = true;
-      setSaveState({ saving: false, error: '', saved: true });
-    } catch (error) {
-      setSaveState({
-        saving: false,
-        error: getApiError(error).message,
-        saved: false,
-      });
-    } finally {
-      pending.current = false;
-    }
-  }
-
+export default function useDoctorAvailability(doctorId) {
   const [catalog, setCatalog] = useState({
     doctors: [],
     error: '',
@@ -76,8 +34,6 @@ export default function useDoctorAvailability(
 
   // La lista de médicos se carga una sola vez, al entrar a la página.
   useEffect(() => {
-    if (saveOnly) return;
-
     // Si el usuario sale de la página antes de que llegue la respuesta, esa
     // respuesta se descarta (mismo criterio que useDoctors).
     let ignore = false;
@@ -103,11 +59,11 @@ export default function useDoctorAvailability(
     return () => {
       ignore = true;
     };
-  }, [saveOnly]);
+  }, []);
 
   // La disponibilidad se vuelve a pedir cada vez que cambia el médico elegido.
   useEffect(() => {
-    if (saveOnly || !doctorId) return;
+    if (!doctorId) return;
 
     // Si se elige otro médico antes de que llegue la respuesta, la anterior
     // se descarta para no mostrar los horarios de otro médico.
@@ -134,7 +90,7 @@ export default function useDoctorAvailability(
     return () => {
       ignore = true;
     };
-  }, [doctorId, saveOnly]);
+  }, [doctorId]);
 
   // El resultado se usa solo si es del médico elegido ahora. Mientras llega
   // la respuesta del nuevo médico, se devuelve null y la página muestra
@@ -144,9 +100,5 @@ export default function useDoctorAvailability(
   return {
     catalog,
     result: currentResult,
-    saveAvailability,
-    saving: saveState.saving,
-    saveError: saveState.error,
-    saved: saveState.saved,
   };
 }
