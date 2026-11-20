@@ -1,91 +1,41 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import useAuth from '../../../auth/hook/useAuth';
 import Button from '../../../shared/components/Button';
 import Card from '../../../shared/components/Card';
 import FormMessage from '../../../shared/components/FormMessage';
 import Modal from '../../../shared/components/Modal';
-import useCreateAppointment from '../../hooks/useCreateAppointment';
+import useBookingCalendar from '../../hooks/useBookingCalendar';
 import { formatTime } from '../../../shared/helpers/formatDate';
 import BookingSummary from './BookingSummary';
 import {
-  addDays,
   formatWeekLabel,
   getDayName,
   getDayNumber,
-  getMonday,
   getShortMonth,
-  getToday,
-  getWeekDays,
-  isWeekend,
 } from './dates';
 
-// Agrupa los bloques por fecha: { '2026-11-10': [bloque, bloque], ... }
-function groupByDate(slots) {
-  const groups = {};
-
-  for (const slot of slots) {
-    if (!groups[slot.date]) {
-      groups[slot.date] = [];
-    }
-
-    groups[slot.date].push(slot);
-  }
-
-  return groups;
-}
-
-// Ordena por fecha y hora. Las dos son texto con formato fijo
-// ('YYYY-MM-DD' y 'HH:mm'), así que se pueden comparar como texto.
-function sortSlots(slots) {
-  return [...slots].sort((a, b) =>
-    (a.date + a.startTime).localeCompare(b.date + b.startTime)
-  );
-}
-
-// Calendario semanal con los bloques libres del médico elegido.
-// - slots: bloques del médico, tal como los devuelve el backend.
-// El backend ya devuelve solo bloques libres y futuros: acá no se filtra.
 export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
-  const { dni } = useAuth();
-  const { create, isSubmitting, success, error, conflict, clearConflict } =
-    useCreateAppointment();
-  const sortedSlots = sortSlots(slots);
-  const slotsByDate = groupByDate(sortedSlots);
-  const showWeekend = sortedSlots.some((slot) => isWeekend(slot.date));
-  const daysPerWeek = showWeekend ? 7 : 5;
-
-  // Límites de la navegación: no se puede ir antes de la semana actual ni
-  // después de la semana del último bloque.
-  const currentMonday = getMonday(getToday());
-  const lastMonday =
-    sortedSlots.length > 0
-      ? getMonday(sortedSlots[sortedSlots.length - 1].date)
-      : currentMonday;
-
-  // La primera semana que se muestra es la del primer bloque libre, para no
-  // arrancar en una semana vacía.
-  const firstMonday =
-    sortedSlots.length > 0 ? getMonday(sortedSlots[0].date) : currentMonday;
-
-  const [monday, setMonday] = useState(firstMonday);
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  // Día abierto en la vista de celular (muestra los horarios de ese día).
-  const [mobileDate, setMobileDate] = useState(
-    sortedSlots.length > 0 ? sortedSlots[0].date : firstMonday
-  );
-
-  const weekDays = getWeekDays(monday, daysPerWeek);
-
-  // Al cambiar de semana, en el celular se abre el primer día con bloques.
-  function goToWeek(newMonday) {
-    setMonday(newMonday);
-
-    const newWeek = getWeekDays(newMonday, daysPerWeek);
-    const firstDayWithSlots = newWeek.find((day) => slotsByDate[day]);
-
-    setMobileDate(firstDayWithSlots ?? newMonday);
-  }
+  const {
+    weekDays,
+    slotsByDate,
+    showWeekend,
+    mobileDate,
+    mobileSlots,
+    selectedSlot,
+    canGoToPreviousWeek,
+    canGoToNextWeek,
+    goToPreviousWeek,
+    goToNextWeek,
+    selectDate,
+    selectSlot,
+    confirmBooking,
+    closeConflict,
+    isSubmitting,
+    success,
+    conflict,
+    error,
+    isSelectionDisabled,
+    isBookingDisabled,
+  } = useBookingCalendar({ slots, onReload, isLoading });
 
   function renderSlotButton(slot, extraClass = '') {
     const isSelected =
@@ -96,8 +46,8 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
         key={slot.availabilitySlotId}
         type="button"
         aria-pressed={isSelected}
-        disabled={isSubmitting || success || conflict || isLoading}
-        onClick={() => setSelectedSlot(slot)}
+        disabled={isSelectionDisabled}
+        onClick={() => selectSlot(slot)}
         className={`w-full rounded-lg border px-2 py-2 text-center text-xs font-semibold transition-all ${extraClass} ${
           isSelected
             ? 'border-emerald-400 bg-emerald-400 text-white shadow-sm'
@@ -109,24 +59,6 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
     );
   }
 
-  async function confirmBooking({ slot, reason }) {
-    const result = await create({
-      doctorId: slot?.doctor?.doctorId,
-      availabilitySlotId: slot?.availabilitySlotId,
-      dni,
-      reason,
-    });
-
-    if (result === 'conflict') setSelectedSlot(null);
-  }
-
-  function closeConflict() {
-    clearConflict();
-    onReload();
-  }
-
-  const mobileSlots = slotsByDate[mobileDate] ?? [];
-
   return (
     <>
       <Card className="p-5 sm:p-6">
@@ -136,8 +68,8 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
             <button
               type="button"
               aria-label="Semana anterior"
-              disabled={monday <= currentMonday}
-              onClick={() => goToWeek(addDays(monday, -7))}
+              disabled={!canGoToPreviousWeek}
+              onClick={goToPreviousWeek}
               className="min-h-9 min-w-9 rounded-md border border-med-border text-med-text-sub transition hover:bg-med-bg disabled:cursor-not-allowed disabled:opacity-40"
             >
               ‹
@@ -148,8 +80,8 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
             <button
               type="button"
               aria-label="Semana siguiente"
-              disabled={monday >= lastMonday}
-              onClick={() => goToWeek(addDays(monday, 7))}
+              disabled={!canGoToNextWeek}
+              onClick={goToNextWeek}
               className="min-h-9 min-w-9 rounded-md border border-med-border text-med-text-sub transition hover:bg-med-bg disabled:cursor-not-allowed disabled:opacity-40"
             >
               ›
@@ -216,7 +148,7 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
                   key={day}
                   type="button"
                   aria-pressed={isActive}
-                  onClick={() => setMobileDate(day)}
+                  onClick={() => selectDate(day)}
                   className={`min-w-[64px] flex-1 rounded-xl border px-2 py-2.5 text-center transition-all ${
                     isActive
                       ? 'border-med-primary-900 bg-med-primary-900 text-white shadow-sm'
@@ -259,12 +191,8 @@ export default function SlotPicker({ doctorName, slots, onReload, isLoading }) {
         slot={selectedSlot}
         onConfirm={confirmBooking}
         isSubmitting={isSubmitting}
-        disabled={!dni || success || conflict || isLoading}
-        error={
-          !dni
-            ? 'No se encontró el DNI de tu sesión. Volvé a iniciar sesión.'
-            : error
-        }
+        disabled={isBookingDisabled}
+        error={error}
       />
 
       <Modal
