@@ -25,20 +25,27 @@ El backend usa SQLite y aplica las migraciones al iniciar en Development. No cop
 
 ## Frontend
 
-Desde la raíz del repositorio frontend, instalá las dependencias existentes e iniciá Vite:
+Desde la raíz del repositorio frontend, instalá las dependencias y prepará la configuración a partir de la plantilla antes de iniciar Vite. El comando `cp` funciona en Git Bash y PowerShell.
 
 ```powershell
 npm ci
+cp .env.example .env.development
 npm run dev
 ```
 
-El archivo .env.development debe contener:
+La plantilla `.env.example` contiene la URL predeterminada del backend. El repositorio también incluye `.env.development` con ese mismo valor público.
 
 ```env
 VITE_BACKEND_URL=http://localhost:5278
 ```
 
-El script seed:dev lee ese archivo mediante Node y usa la misma URL que Vite.
+Para usar otra instancia del backend, cambiá `VITE_BACKEND_URL` en `.env.development` por la URL que indique su terminal al iniciar. Por ejemplo, si el backend escucha en `http://localhost:5280`, usá esa dirección. Reiniciá `npm run dev` después de cambiarla.
+
+Vite usa esta variable como destino de su proxy de desarrollo. Las peticiones del navegador van a `/api` en el mismo origen del frontend y Vite las reenvía al backend configurado. Si falta la variable, el proxy utiliza `http://localhost:5278`.
+
+El script `npm run seed:dev` lee `.env.development` mediante Node y usa la misma URL que Vite.
+
+Los archivos de configuración del frontend contienen valores públicos. La clave JWT y las credenciales del administrador se configuran en el backend mediante User Secrets, como se explica arriba. Las variables `SEED_ADMIN_EMAIL` y `SEED_ADMIN_PASSWORD` se definen en la terminal para ejecutar el seed.
 
 ## Cargar datos de prueba
 
