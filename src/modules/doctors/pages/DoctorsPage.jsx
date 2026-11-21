@@ -19,7 +19,7 @@ const linkClass =
   'inline-flex min-h-9 items-center rounded-lg bg-med-primary-900 px-2 py-1 text-xs font-medium text-med-card shadow-sm transition hover:bg-med-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-med-primary-600';
 
 // Columnas de la tabla. Solo se muestran datos que el backend devuelve:
-// nombre, matrícula y especialidad (ver docs/api-contract.md).
+// nombre, matrícula y especialidad.
 const columns = [
   { key: 'name', header: 'Nombre' },
   { key: 'licenseNumber', header: 'Matrícula' },

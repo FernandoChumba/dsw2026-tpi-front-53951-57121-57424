@@ -1,6 +1,5 @@
 // Traduce los errores del backend a mensajes en español para la UI.
 // El backend responde: { errorCode, message, details: [{ field, issue }] }.
-// Ver la sección "Errores" de docs/api-contract.md.
 
 const MESSAGES = {
   VALIDATION_ERROR: 'Revisá los datos ingresados.',
